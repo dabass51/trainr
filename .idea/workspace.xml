@@ -5,9 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/lib/auth.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/activities/[activityId]/gps-data/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/activities/[activityId]/gps-data/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/activities/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/activities/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/create/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/create/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/events/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/gps-data/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/gps-data/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/profile/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/profile/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/training-units/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/training-units/route.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/upload/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/upload/route.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

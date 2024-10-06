@@ -1,7 +1,7 @@
 // app/api/generate-training-plan/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from "next-auth/next";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 import { promptAndAnswer } from '@/lib/tools';
 
 export async function POST(request: NextRequest) {
