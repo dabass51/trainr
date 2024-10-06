@@ -21,8 +21,7 @@ import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { signOut } from 'next-auth/react'
+import { authOptions } from "@/lib/auth"
 import {Signout} from "@/components/signout";
 
 type HomeIconProps = React.SVGProps<SVGSVGElement>;
