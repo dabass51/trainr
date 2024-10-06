@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
     try {
         const formData = await req.formData();
         const file = formData.get('gpsFile') as File | null;
-        const activityName = formData.get('activityName') as ActivityType | null | undefined;
-        const activityType = formData.get('activityType') as ActivityType | null | undefined;
+        const activityName = formData.get('activityName') as ActivityType;
+        const activityType = formData.get('activityType') as ActivityType;
 
         if (!file || !activityName) {
             return NextResponse.json({ error: 'Missing file or activity name' }, { status: 400 });
