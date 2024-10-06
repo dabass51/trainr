@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/activities/[activityId]/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/activities/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/activities/[activityId]/gps-data/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/activities/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/ask-llm/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/auth/signup/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/events/[eventId]/edit/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/events/[eventId]/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/events/create/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/gps-data/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/profile/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/training-units/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/upload/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/api/weight/route.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/marketing/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/app/marketing/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/auth/signin/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/auth/signup/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/dashboard/Page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/events/[eventId]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/events/create/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/marketing/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/marketing/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/profile/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/training-units/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/upload/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/weight/[weightId]/edit/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/weight/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ActivityPromptGenerator.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/Chat.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/Hero.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ProfileForm.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/SpeechToText.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TrainingUnits.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TrainingUnitsCalendar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/TrainingUnitsList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/header_home.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/signin.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/signout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/spinner.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/prisma.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/schemas.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/tools.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/provider/SessionProvider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/next-auth.d.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/dateHelpers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2jVmcCJIfs5PpKRul3cRF2gcfUU" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/Users/heikopluemer/workspace/trainer/components",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "/Applications/IntelliJ IDEA.app/Contents/plugins/javascript-impl/jsLanguageServicesImpl/external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/components" />
+      <recent name="$PROJECT_DIR$/app/auth" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/weight" />
+      <recent name="$PROJECT_DIR$/app/api/activities" />
+      <recent name="$PROJECT_DIR$/app/api/events/[eventId]" />
+      <recent name="$PROJECT_DIR$/prisma" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="trainer" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="trainer" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-17.0.10-temurin-17.0.10-4caba194b151-a600c99e" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="" />
+      <created>1721480695624</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1721480695624</updated>
+      <workItem from="1721480696687" duration="56506000" />
+      <workItem from="1721938873047" duration="77000" />
+      <workItem from="1721938954823" duration="16042000" />
+      <workItem from="1724167049185" duration="598000" />
+      <workItem from="1724751723357" duration="1000" />
+      <workItem from="1726750048743" duration="29057000" />
+      <workItem from="1727984790273" duration="57662000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
