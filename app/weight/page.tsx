@@ -10,9 +10,7 @@ import { Card, CardTitle, CardDescription, CardHeader,CardContent } from '@/comp
 import { Label } from '@/components/ui/label';
 import { Select,
     SelectContent,
-    SelectGroup,
     SelectItem,
-    SelectLabel,
     SelectTrigger,
     SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
@@ -85,7 +83,7 @@ export default function WeightPage() {
 
             <Card>
                 <CardHeader>
-                    <CardTitle>Enter Today's Weight</CardTitle>
+                    <CardTitle>Enter Today&apos;s Weight</CardTitle>
                     <CardDescription>Keep track of your weight journey</CardDescription>
                 </CardHeader>
                 <CardContent>
