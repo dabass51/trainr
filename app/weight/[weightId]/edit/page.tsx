@@ -21,7 +21,7 @@ export default function EditWeightPage() {
                 if (res.ok) {
                     const data: WeightEntry = await res.json();
                     setWeight(data.weight.toString());
-                    setUnit(data.unit);
+                    setUnit(data.unit as 'kg' | 'lbs');
                 }
                 setLoading(false);
             }
