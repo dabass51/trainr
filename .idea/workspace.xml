@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/lib/auth.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
