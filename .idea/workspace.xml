@@ -5,65 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/activities/[activityId]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/activities/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/activities/[activityId]/gps-data/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/activities/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/ask-llm/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/auth/[...nextauth]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/auth/signup/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/events/[eventId]/edit/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/events/[eventId]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/events/create/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/events/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/gps-data/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/profile/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/training-units/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/upload/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/api/weight/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/app/marketing/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/app/marketing/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/signin/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/auth/signup/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/dashboard/Page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/events/[eventId]/edit/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/events/create/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/marketing/layout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/marketing/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/profile/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/training-units/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/upload/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/weight/[weightId]/edit/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/weight/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ActivityPromptGenerator.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/Chat.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/Hero.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ProfileForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/SpeechToText.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/TrainingUnits.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/TrainingUnitsCalendar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/TrainingUnitsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/header_home.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/signin.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/signout.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/spinner.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/prisma.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/schemas.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/tools.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/provider/SessionProvider.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/next-auth.d.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/dateHelpers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/tailwind.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +90,7 @@
       <workItem from="1724167049185" duration="598000" />
       <workItem from="1724751723357" duration="1000" />
       <workItem from="1726750048743" duration="29057000" />
-      <workItem from="1727984790273" duration="57662000" />
+      <workItem from="1727984790273" duration="57973000" />
     </task>
     <servers />
   </component>
