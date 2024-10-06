@@ -6,7 +6,7 @@ import { prisma } from "@/lib/prisma"
 import bcrypt from "bcrypt"
 
 export const authOptions: NextAuthOptions = {
-    adapter: PrismaAdapter(prisma),
+    adapter: PrismaAdapter(prisma) as unknown as import("next-auth/adapters").Adapter,
     providers: [
         CredentialsProvider({
             name: "Credentials",
@@ -36,7 +36,6 @@ export const authOptions: NextAuthOptions = {
                 return {
                     id: user.id,
                     email: user.email,
-                    name: user.name,
                 }
             }
         })
@@ -45,8 +44,7 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
     },
     pages: {
-        signIn: "/auth/signin",
-        signUp: "/auth/signup",
+        signIn: "/auth/signin"
     },
     callbacks: {
         async jwt({ token, user }) {
