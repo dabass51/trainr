@@ -1,9 +1,13 @@
 import { Bell } from 'lucide-react';
-
+import { getServerSession } from "next-auth/next"
+import { authOptions } from "@/lib/auth"
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import Link from "next/link"
 
-const Hero = () => {
+export async function Hero() {
+    const session = await getServerSession(authOptions)
+
     return (
         <section className="py-32">
             <div className="container">
@@ -28,14 +32,18 @@ const Hero = () => {
                     <Button size={'lg'} className="w-full md:w-auto">
                         start now
                     </Button>
+
+
+
+
+
+                <Link href="/auth/signin" className="flex items-center gap-2 text-lg font-medium">
                     <Button size={'lg'} variant={'outline'} className="w-full md:w-auto">
-                        
-                        login
+                    Sign in
                     </Button>
+                </Link>
                 </div>
             </div>
         </section>
     );
 };
-
-export default Hero;

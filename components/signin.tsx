@@ -45,7 +45,8 @@ export function Signin() {
     if (result?.error) {
       setError(result.error)
     } else {
-      router.push('/')
+      router.push('/');
+      router.refresh();
     }
   }
   return (
