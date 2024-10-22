@@ -6,14 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c9294f32-4385-451e-a58c-13a6b583069b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/[eventId]/edit/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/[eventId]/edit/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/api/events/create/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/events/create/route.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app/marketing/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/[eventId]/edit/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/[eventId]/edit/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/create/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/create/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/events/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/events/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/tools.ts" beforeDir="false" afterPath="$PROJECT_DIR$/lib/tools.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" beforeDir="false" afterPath="$PROJECT_DIR$/app/api/generate-training-plan/route.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +95,7 @@
       <workItem from="1727984790273" duration="57973000" />
       <workItem from="1728824416898" duration="2640000" />
       <workItem from="1729109378482" duration="2191000" />
-      <workItem from="1729609117152" duration="5614000" />
+      <workItem from="1729609117152" duration="6482000" />
     </task>
     <servers />
   </component>
