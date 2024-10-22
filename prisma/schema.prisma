@@ -14,6 +14,14 @@ enum ActivityType {
   RUNNING
   CYCLING
   SWIMMING
+  TRIATHLON
+}
+
+enum SportType {
+  RUNNING
+  CYCLING
+  SWIMMING
+  TRIATHLON
 }
 
 model User {
@@ -125,6 +133,8 @@ model Event {
   title       String
   description String?
   date        DateTime
+  sportType   SportType
+  distance    String?
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      String
   createdAt   DateTime  @default(now())

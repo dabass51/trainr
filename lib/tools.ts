@@ -605,7 +605,6 @@ export async function executeFunction(
 }
 
 export const promptAndAnswer = async (prompt: string, userId: string) => {
-    //const systemPrompt = `You are a helpful assistant that manages a user's training schedule. You can generate training plans, add individual training units, retrieve existing training units, and edit training units. When asked to edit a training unit, first retrieve the unit for the specified day, then apply the requested changes. Always use the YYYY-MM-DD format for dates. words like today, tomorrow, etc... should be translated to a date. today is ${ getCurrentDateInYYYYMMDD() }. Respond as JSON using the following schema: {"functionName": "function name", "parameters": [{"parameterName": "name of parameter", "parameterValue": "value of parameter"}]}. The tools are: ${toolsString}`;
 
     const systemPrompt = `
 You are a helpful assistant that manages a user's training schedule. You can generate training plans, add individual training units, retrieve existing training units, and edit training units.
@@ -657,6 +656,8 @@ The tools are: ${toolsString}
     const client = new OpenAI({
         apiKey: process.env['OPENAI_API_KEY'],
     });
+
+    console.log(systemPrompt)
 
     const response = await client.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, {role: 'user', content:prompt}],

@@ -70,6 +70,9 @@ export default function EventsList() {
                                     <Card className="bg-gray-100 p-4">
                                         <CardTitle>{event.title}</CardTitle>
                                         <p>{new Date(event.date).toLocaleDateString()}</p>
+
+                                        <p>{event.sportType}</p>
+                                        <p>{event.distance}</p>
                                         <Link href={`/events/${event.id}/edit/`}>
                                             <Button>edit event</Button>
                                         </Link>

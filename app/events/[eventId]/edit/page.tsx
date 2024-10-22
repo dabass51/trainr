@@ -7,10 +7,31 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+
+type SportType = 'RUNNING' | 'CYCLING' | 'SWIMMING' | 'TRIATHLON';
+
+const distanceOptions: Record<SportType, string[]> = {
+    RUNNING: ['5K', '10K', 'Half Marathon', 'Marathon'],
+    CYCLING: ['20K', '50K', '100K', '200K'],
+    SWIMMING: ['500m', '1K', '2K', '5K', 'Open Water'],
+    TRIATHLON: ['Sprint', 'Olympic', 'Half Ironman', 'Ironman'],
+};
+
 export default function EditEvent() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
+    const [sportType, setSportType] = useState<SportType>('RUNNING');
+    const [distance, setDistance] = useState('');
     const [loading, setLoading] = useState(false);
     const router = useRouter();
     const { eventId } = useParams();
@@ -24,11 +45,18 @@ export default function EditEvent() {
 
             setTitle(data.title);
             setDescription(data.description);
-            setDate(new Date(data.date).toISOString().split('T')[0]); // Format date for input
+            setDate(new Date(data.date).toISOString().split('T')[0]);
+            setSportType(data.sportType as SportType);
+            setDistance(data.distance);
         }
 
         fetchEvent();
     }, [eventId]);
+
+    const handleSportTypeChange = (value: string) => {
+        setSportType(value as SportType);
+        setDistance('');
+    };
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
@@ -37,7 +65,7 @@ export default function EditEvent() {
         const res = await fetch(`/api/events/${eventId}/edit`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title, description, date }),
+            body: JSON.stringify({ title, description, date, sportType, distance }),
         });
 
         setLoading(false);
@@ -99,6 +127,43 @@ export default function EditEvent() {
                             required
                         />
                     </div>
+
+                    <div>
+                        <label htmlFor="sportType" className="block text-sm font-medium">
+                            Type of Sport
+                        </label>
+                        <Select value={sportType} onValueChange={handleSportTypeChange}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue placeholder="Select sport type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="RUNNING">Running</SelectItem>
+                                <SelectItem value="CYCLING">Cycling</SelectItem>
+                                <SelectItem value="SWIMMING">Swimming</SelectItem>
+                                <SelectItem value="TRIATHLON">Triathlon</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    {sportType && (
+                        <div>
+                            <label htmlFor="distance" className="block text-sm font-medium">
+                                Distance/Event Type
+                            </label>
+                            <Select value={distance} onValueChange={setDistance}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select distance or event type" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {distanceOptions[sportType].map((option) => (
+                                        <SelectItem key={option} value={option}>
+                                            {option}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    )}
 
                     <Button type="submit" disabled={loading}>
                         {loading ? 'Updating...' : 'Update Event'}

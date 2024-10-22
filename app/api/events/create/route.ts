@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 
 export async function POST(req: Request) {
-    const { title, description, date } = await req.json();
+    const { title, description, date, sportType, distance } = await req.json();
 
     const session = await getServerSession(authOptions);
 
@@ -22,6 +22,8 @@ export async function POST(req: Request) {
                 title,
                 description,
                 date: new Date(date),
+                sportType,
+                distance,
                 user: { connect: { id: session.user.id } }, // Connect event with a user via userId
             },
         });
