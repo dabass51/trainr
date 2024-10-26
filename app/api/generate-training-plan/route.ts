@@ -41,13 +41,18 @@ export async function POST(request: NextRequest) {
 
 async function processTrainingPlan(jobId: string, prompt: string, userId: string) {
     try {
-        await prisma.job.update({
+        console.log(`Starting job processing for job ID: ${jobId}`);
+
+        // Set job status to IN_PROGRESS
+        const updatedJob = await prisma.job.update({
             where: { id: jobId },
             data: { status: 'IN_PROGRESS' },
         });
+        console.log(`Job ${jobId} set to IN_PROGRESS`);
 
         const result = await promptAndAnswer(prompt, userId);
 
+        // Update the job status to COMPLETED with the result
         await prisma.job.update({
             where: { id: jobId },
             data: {
@@ -55,8 +60,9 @@ async function processTrainingPlan(jobId: string, prompt: string, userId: string
                 result: JSON.stringify(result),
             },
         });
+        console.log(`Job ${jobId} completed successfully`);
     } catch (error) {
-        console.error('Error processing training plan:', error);
+        console.error(`Error processing job ${jobId}:`, error);
         await prisma.job.update({
             where: { id: jobId },
             data: {
