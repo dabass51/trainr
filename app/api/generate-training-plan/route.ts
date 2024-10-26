@@ -61,7 +61,7 @@ async function processTrainingPlan(jobId: string, prompt: string, userId: string
             where: { id: jobId },
             data: {
                 status: 'FAILED',
-                error: error.message,
+                error: error instanceof Error ? error.message : 'Unknown error',
             },
         });
     }
