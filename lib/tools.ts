@@ -673,11 +673,15 @@ The tools are: ${toolsString}
     // });
 
     let responseObject;
+    console.log(`parse response for user ${userId}`);
+
     try {
         const content = response.choices[0].message?.content;
-
+        console.log(content);
         if (content) {
             responseObject = JSON.parse(content);
+            console.log(`Successfully parsed response for user ${userId}`);
+
         } else {
             throw new Error("Response content is null or undefined.");
         }
