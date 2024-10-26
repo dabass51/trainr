@@ -51,6 +51,7 @@ async function processTrainingPlan(jobId: string, prompt: string, userId: string
         console.log(`Job ${jobId} set to IN_PROGRESS`);
 
         const result = await promptAndAnswer(prompt, userId);
+        console.log(`Received result for job ${jobId}:`, result);
 
         // Update the job status to COMPLETED with the result
         await prisma.job.update({
