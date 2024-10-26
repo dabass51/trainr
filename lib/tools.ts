@@ -657,25 +657,26 @@ The tools are: ${toolsString}
         apiKey: process.env['OPENAI_API_KEY'],
     });
 
-    const response = await client.chat.completions.create({
-        messages: [{ role: 'system', content: systemPrompt }, {role: 'user', content:prompt}],
-        model: 'gpt-4o-mini',
-        stream: false,
-        response_format: {"type": "json_object"},
-    });
-
-    // const response = await Ollama.generate({
-    //     model: "llama3:latest",
-    //     system: systemPrompt,
-    //     prompt: prompt,
-    //     stream: false,
-    //     format: "json",
-    // });
-
     let responseObject;
     console.log(`parse response for user ${userId}`);
 
     try {
+
+        const response = await client.chat.completions.create({
+            messages: [{ role: 'system', content: systemPrompt }, {role: 'user', content:prompt}],
+            model: 'gpt-4o-mini',
+            stream: false,
+            response_format: {"type": "json_object"},
+        });
+
+        // const response = await Ollama.generate({
+        //     model: "llama3:latest",
+        //     system: systemPrompt,
+        //     prompt: prompt,
+        //     stream: false,
+        //     format: "json",
+        // });
+
         const content = response.choices[0].message?.content;
         console.log(content);
         if (content) {
