@@ -333,7 +333,7 @@ async function GenerateTrainingPlan(userId: string, startDate?: string,  endDate
         data: trainingUnitsWithUserId,
     });
 
-    return savedUnits;
+    return trainingUnitsWithUserId;
 }
 
 async function rescheduleTrainingPlan(userId: string, conflictingDateStart: string, conflictingDateEnd: string, reason:string) {
@@ -553,7 +553,7 @@ export async function executeFunction(
     functionName: string,
     parameters: FunctionParameter[],
 ) {
-    console.log(functionName)
+
     switch (functionName) {
         case "GenerateTrainingPlan":
             console.log("GenerateTrainingPlan")
@@ -656,8 +656,6 @@ The tools are: ${toolsString}
     const client = new OpenAI({
         apiKey: process.env['OPENAI_API_KEY'],
     });
-
-    console.log(systemPrompt)
 
     const response = await client.chat.completions.create({
         messages: [{ role: 'system', content: systemPrompt }, {role: 'user', content:prompt}],

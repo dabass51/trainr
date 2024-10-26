@@ -45,7 +45,6 @@ const Chat: React.FC<ChatProps> = ({ onGeneratePlan }) => {
 
                 </div>
             </form>
-
         </div>
     );
 };

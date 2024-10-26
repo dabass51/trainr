@@ -35,10 +35,6 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
     const { weight, unit, date } = await req.json();
 
-    console.log(weight)
-    console.log(unit)
-    console.log(date)
-
     const session = await getServerSession( authOptions )
 
     if (!session) {

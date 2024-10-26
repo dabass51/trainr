@@ -8,6 +8,8 @@ import {Button} from '@/components/ui/button'
 import TrainingUnitsList from '@/components/TrainingUnitsList';
 import TrainingUnitsCalendar from '@/components/TrainingUnitsCalendar';
 import { List, Calendar } from 'lucide-react';
+import { useJob } from '@/provider/JobProvider';
+
 
 interface TrainingUnit {
     id: string;
@@ -27,6 +29,8 @@ export default function TrainingUnitsPage() {
     const [isCalendarView, setIsCalendarView] = useState(false);
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+
+    const { setJob } = useJob();
 
     useEffect(() => {
         if (session) {
@@ -74,7 +78,7 @@ export default function TrainingUnitsPage() {
         } else {
             setSelectedDate(null);
         }
-        setIsCalendarView(false); // Switch back to list view on date click
+        setIsCalendarView(false);
     };
 
     const handleGeneratePlan = async (prompt: string) => {
@@ -87,13 +91,9 @@ export default function TrainingUnitsPage() {
                 body: JSON.stringify({ prompt }),
             });
             if (response.ok) {
-                const result = await response.json();
-                console.log('Response from API:', result);
-
-                if (result && result.result) {
-                    setUnits(result.result); // Assuming API returns the generated units
-                } else {
-                    setError('Failed to generate training plan');
+                const data = await response.json();
+                if (data.jobId) {
+                    setJob({ id: data.jobId, status: 'IN_PROGRESS' });
                 }
             } else {
                 const errorData = await response.json();

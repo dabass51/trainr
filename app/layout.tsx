@@ -4,6 +4,7 @@ import "./globals.css";
 import {ClientSessionProvider} from '@/provider/SessionProvider'
 import {Header} from "@/components/header";
 import {Footer} from "@/components/footer";
+import { JobProvider } from '@/provider/JobProvider';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,9 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
       <ClientSessionProvider>
+          <JobProvider>
           <Header></Header>
             {children}
           <Footer></Footer>
+          </JobProvider>
       </ClientSessionProvider>
       </body>
     </html>
