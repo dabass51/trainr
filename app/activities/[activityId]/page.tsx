@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 import { GPSData, Activity, ActivityType } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -13,6 +13,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import 'leaflet/dist/leaflet.css';
 import { getDistance } from 'geolib';
 import ActivityPromptGenerator from '@/components/ActivityPromptGenerator';
+import { Loader2 } from "lucide-react";
 
 
 type GPSDataWithActivity = GPSData & { activity: Activity };
@@ -25,27 +26,32 @@ export default function ActivityDetailPage() {
     const [activity, setActivity] = useState<Activity | null>(null);
     const [gpsData, setGpsData] = useState<GPSDataWithActivity[]>([]);
     const [activityName, setActivityName] = useState('');
-    const [activityType, setActivityType] = useState<ActivityType | null>('' || null);
+    const [activityType, setActivityType] = useState<ActivityType | null>(null);
 
     const [metricData, setMetricData] = useState<{ elapsedTime: number; value: number }[]>([]);
 
     useEffect(() => {
         if (session && activityId) {
-            fetchGpsData();
+            void fetchGpsData();
         }
     }, [session, activityId]);
 
     const fetchGpsData = async () => {
-        const response = await fetch(`/api/activities/${activityId}/gps-data`);
-        if (response.ok) {
-            const data: GPSDataWithActivity[] = await response.json();
+        try {
+            const response = await fetch(`/api/activities/${activityId}/gps-data`);
+            if (response.ok) {
+                const data: GPSDataWithActivity[] = await response.json();
 
-            if (data.length > 0) {
-                setActivityName(data[0].activity.name);
-                setGpsData(data);
-                setActivity(data[0].activity);
+                if (data.length > 0) {
+                    setActivityName(data[0].activity.name);
+                    setGpsData(data);
+                    setActivity(data[0].activity);
+                }
+            } else {
+                setGpsData([]);
             }
-        } else {
+        } catch (error) {
+            console.error('Error fetching GPS data:', error);
             setGpsData([]);
         }
     };
@@ -161,13 +167,19 @@ export default function ActivityDetailPage() {
         return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
-    if (status === 'loading') return <p>Loading...</p>;
+    if (status === 'loading') {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
 
     if (!session) {
         return (
             <div className="container mx-auto p-4">
                 <h1 className="text-2xl font-bold mb-4">Sign In</h1>
-                <Button onClick={() => signIn()}>Sign In</Button>
+                <Button onClick={() => void signIn()}>Sign In</Button>
             </div>
         );
     }

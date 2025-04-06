@@ -58,7 +58,7 @@ export function QuickPrompts({ onPromptSelect }: QuickPromptsProps) {
                                 : 'bg-primary/10 text-primary'
                             }
                         `}>
-                            <item.icon className="h-4 w-4" />
+                            <item.icon />
                         </div>
                         <div>
                             <h3 className="font-medium">{item.title}</h3>
