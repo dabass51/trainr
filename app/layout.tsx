@@ -5,6 +5,7 @@ import {ClientSessionProvider} from '@/provider/SessionProvider'
 import {Header} from "@/components/header";
 import {Footer} from "@/components/footer";
 import { JobProvider } from '@/provider/JobProvider';
+import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
             {children}
           <Footer></Footer>
           </JobProvider>
+          <Toaster />
       </ClientSessionProvider>
       </body>
     </html>

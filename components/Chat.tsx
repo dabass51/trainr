@@ -6,9 +6,10 @@ import { Button } from "@/components/ui/button"
 
 interface ChatProps {
     onGeneratePlan: (prompt: string) => void;
+    disabled?: boolean;
 }
 
-const Chat: React.FC<ChatProps> = ({ onGeneratePlan }) => {
+const Chat: React.FC<ChatProps> = ({ onGeneratePlan, disabled = false }) => {
     const [prompt, setPrompt] = useState('');
 
     const handlePromptChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -32,17 +33,20 @@ const Chat: React.FC<ChatProps> = ({ onGeneratePlan }) => {
                     value={prompt}
                     onChange={handlePromptChange}
                     placeholder="Enter your request here (e.g., 'Generate a 7-day training plan')"
+                    disabled={disabled}
                 />
                 <div className="flex justify-end space-x-2 mt-4">
-                    <SpeechToText onTranscript={handleSpeechInput}/>
+                    <SpeechToText 
+                        onTranscript={handleSpeechInput}
+                        disabled={disabled}
+                    />
                     <Button
                         type="submit"
-                        disabled={!prompt}
+                        disabled={!prompt || disabled}
                         className="ml-5"
                     >
-                        Submit Prompt
+                        {disabled ? 'Generating Plan...' : 'Submit Prompt'}
                     </Button>
-
                 </div>
             </form>
         </div>

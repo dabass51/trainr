@@ -1,0 +1,33 @@
+/* Make calendar full width */
+.rdp {
+    width: 100% !important;
+}
+
+.rdp-months {
+    width: 100% !important;
+    justify-content: stretch !important;
+}
+
+.rdp-month {
+    width: 100% !important;
+}
+
+.rdp-table {
+    width: 100% !important;
+}
+
+.rdp-cell {
+    width: 14.28% !important; /* 100% / 7 days */
+    aspect-ratio: 1 !important;
+}
+
+.rdp-head_cell {
+    width: 14.28% !important;
+    font-size: 0.875rem !important;
+}
+
+.rdp-day {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: 1 !important;
+} 

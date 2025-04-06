@@ -14,11 +14,9 @@ export async function GET(request: NextRequest) {
     try {
         const trainingUnits = await prisma.trainingUnit.findMany({
             where: { userId: session.user?.id },
-            orderBy:
-                {
-                    date: 'desc'
-                }
-
+            orderBy: {
+                date: 'asc'
+            }
         });
         return NextResponse.json(trainingUnits);
     } catch (error) {
@@ -64,47 +62,70 @@ export async function PUT(request: NextRequest) {
 
     try {
         const body = await request.json();
-        const { id, type, description, duration, intensity, date, completed } = body;
-
-        const trainingUnit = await prisma.trainingUnit.update({
-            where: { id, userId: session.user?.id },
-            data: {
-                type,
-                description,
-                duration,
-                intensity,
-                date: new Date(date),
-                completed,
-            },
-        });
-
-        return NextResponse.json(trainingUnit);
-    } catch (error) {
-        return NextResponse.json({ error: 'Error updating training unit' }, { status: 500 });
-    }
-}
-
-export async function DELETE(request: NextRequest) {
-    const session = await getServerSession(authOptions);
-
-    if (!session) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    try {
-        const { searchParams } = new URL(request.url);
-        const id = searchParams.get('id');
+        const { id, ...updateData } = body;
 
         if (!id) {
             return NextResponse.json({ error: 'Training unit ID is required' }, { status: 400 });
         }
 
-        await prisma.trainingUnit.delete({
-            where: { id, userId: session.user?.id },
+        const trainingUnit = await prisma.trainingUnit.update({
+            where: { 
+                id,
+                userId: session.user?.id 
+            },
+            data: updateData
         });
 
-        return NextResponse.json({ message: 'Training unit deleted successfully' });
+        return NextResponse.json(trainingUnit);
     } catch (error) {
-        return NextResponse.json({ error: 'Error deleting training unit' }, { status: 500 });
+        console.error('Error updating training unit:', error);
+        return NextResponse.json({ error: 'Error updating training unit' }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const session = await getServerSession(authOptions);
+        if (!session?.user?.id) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const { searchParams } = new URL(request.url);
+        const id = searchParams.get('id');
+        const deleteAll = searchParams.get('deleteAll') === 'true';
+
+        if (deleteAll) {
+            // Delete all training units for the current user
+            await prisma.trainingUnit.deleteMany({
+                where: {
+                    userId: session.user.id
+                }
+            });
+            return NextResponse.json({ message: 'All training units deleted successfully' });
+        } else if (id) {
+            // Delete single training unit
+            const trainingUnit = await prisma.trainingUnit.findUnique({
+                where: { id },
+                select: { userId: true }
+            });
+
+            if (!trainingUnit) {
+                return NextResponse.json({ error: 'Training unit not found' }, { status: 404 });
+            }
+
+            if (trainingUnit.userId !== session.user.id) {
+                return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+            }
+
+            await prisma.trainingUnit.delete({
+                where: { id }
+            });
+            return NextResponse.json({ message: 'Training unit deleted successfully' });
+        } else {
+            return NextResponse.json({ error: 'Missing id or deleteAll parameter' }, { status: 400 });
+        }
+    } catch (error) {
+        console.error('Error deleting training unit(s):', error);
+        return NextResponse.json({ error: 'Failed to delete training unit(s)' }, { status: 500 });
     }
 }

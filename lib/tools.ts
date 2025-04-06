@@ -288,7 +288,7 @@ async function GenerateTrainingPlan(userId: string, startDate?: string,  endDate
         messages: [{ role: 'user', content: prompt }],
         model: 'gpt-4o-mini',
         stream: false,
-        response_format: {"type": "json_object"},
+        response_format: {"type": "json_object"}
     });
 
     let trainingPlan;
@@ -334,6 +334,12 @@ async function GenerateTrainingPlan(userId: string, startDate?: string,  endDate
     });
 
     return trainingUnitsWithUserId;
+}
+
+interface RescheduleChange {
+    unitId: string;
+    action: 'moved' | 'cancelled' | 'adjusted';
+    explanation: string;
 }
 
 async function rescheduleTrainingPlan(userId: string, conflictingDateStart: string, conflictingDateEnd: string, reason:string) {
@@ -403,8 +409,8 @@ async function rescheduleTrainingPlan(userId: string, conflictingDateStart: stri
 
         if (content) {
             responseObject = JSON.parse(content);
-            const { rescheduledPlan, changes }: { rescheduledPlan: TrainingUnit[], changes: any[] } = JSON.parse(responseObject);
-            if (new Date(Math.max(...rescheduledPlan.map(unit => new Date(unit.date).getTime()))) > endDate) {
+            const { rescheduledPlan, changes }: { rescheduledPlan: TrainingUnit[], changes: RescheduleChange[] } = responseObject;
+            if (new Date(Math.max(...rescheduledPlan.map((unit: TrainingUnit) => new Date(unit.date).getTime()))) > endDate) {
                 throw new Error('AI rescheduled plan exceeds the specified end date');
             }
 
@@ -413,12 +419,12 @@ async function rescheduleTrainingPlan(userId: string, conflictingDateStart: stri
                     where: {
                         id: {
                             in: changes
-                                .filter(change => change.action === 'cancelled')
-                                .map(change => change.unitId)
+                                .filter((change: RescheduleChange) => change.action === 'cancelled')
+                                .map((change: RescheduleChange) => change.unitId)
                         }
                     }
                 }),
-                ...rescheduledPlan.map(unit =>
+                ...rescheduledPlan.map((unit: TrainingUnit) =>
                     prisma.trainingUnit.upsert({
                         where: { id: unit.id },
                         update: unit,

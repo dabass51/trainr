@@ -4,6 +4,7 @@ import { Mic, MicOff } from 'lucide-react';
 
 interface SpeechToTextProps {
     onTranscript: (transcript: string) => void;
+    disabled?: boolean;
 }
 
 declare global {
@@ -30,7 +31,7 @@ type SpeechRecognitionErrorEvent = {
     error: string;
 };
 
-const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript }) => {
+const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript, disabled = false }) => {
     const [isListening, setIsListening] = useState<boolean>(false);
     const [transcript, setTranscript] = useState<string>('');
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null);
@@ -60,7 +61,7 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript }) => {
     }, [onTranscript]);
 
     const toggleListening = useCallback(() => {
-        if (recognition) {
+        if (recognition && !disabled) {
             if (isListening) {
                 recognition.stop();
             } else {
@@ -68,17 +69,16 @@ const SpeechToText: React.FC<SpeechToTextProps> = ({ onTranscript }) => {
             }
             setIsListening(!isListening);
         }
-    }, [isListening, recognition]);
+    }, [isListening, recognition, disabled]);
 
     return (
-
         <Button
             onClick={toggleListening}
             className={`${isListening ? 'bg-red-500' : ''}`}
+            disabled={disabled}
         >
             {isListening ? <MicOff /> : <Mic />}
         </Button>
-
     );
 };
 

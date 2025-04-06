@@ -4,13 +4,19 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import ProfileForm from '@/components/ProfileForm';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
 
 export default function ProfilePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
 
     if (status === 'loading') {
-        return <div>Loading...</div>;
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
     }
 
     if (status === 'unauthenticated') {
@@ -20,8 +26,17 @@ export default function ProfilePage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-4">Your Profile</h1>
-            <ProfileForm />
+            <Card>
+                <CardHeader>
+                    <CardTitle>Your Profile</CardTitle>
+                    <CardDescription>
+                        Complete your profile to get personalized training plans
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ProfileForm />
+                </CardContent>
+            </Card>
         </div>
     );
 }

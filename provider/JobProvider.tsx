@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { useToast } from "@/hooks/use-toast"
 
 interface Job {
     id: string;
@@ -18,6 +19,7 @@ const JobContext = createContext<JobContextType | undefined>(undefined);
 
 export function JobProvider({ children }: { children: ReactNode }) {
     const [job, setJob] = useState<Job | null>(null);
+    const { toast } = useToast();
 
     useEffect(() => {
         async function pollJobStatus(jobId: string) {
@@ -27,29 +29,40 @@ export function JobProvider({ children }: { children: ReactNode }) {
 
                 if (data.status === 'COMPLETED' || data.status === 'FAILED') {
                     setJob(data);
+                    // Show toast notification based on status
+                    if (data.status === 'COMPLETED') {
+                        toast({
+                            title: "Success",
+                            description: "Training plan generated successfully!",
+                        });
+                    } else {
+                        toast({
+                            title: "Error",
+                            description: data.error || "Failed to generate training plan",
+                            variant: "destructive",
+                        });
+                    }
                 } else {
                     setTimeout(() => pollJobStatus(jobId), 5000); // Poll every 5 seconds
                 }
             } catch (error) {
                 console.error('Error polling job status:', error);
+                toast({
+                    title: "Error",
+                    description: "Error checking job status",
+                    variant: "destructive",
+                });
             }
         }
 
         if (job && job.status === 'IN_PROGRESS') {
             pollJobStatus(job.id);
         }
-    }, [job]);
+    }, [job, toast]);
 
     return (
         <JobContext.Provider value={{ job, setJob }}>
             {children}
-            {job && (job.status === 'COMPLETED' || job.status === 'FAILED') && (
-                <div className="toast">
-                    {job.status === 'COMPLETED'
-                        ? `Job completed: ${job.result}`
-                        : `Job failed: ${job.error}`}
-                </div>
-            )}
         </JobContext.Provider>
     );
 }

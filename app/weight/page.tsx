@@ -48,8 +48,13 @@ export default function WeightPage() {
         });
 
         if (res.ok) {
-            const data = await res.json();
-            setWeights((prevWeights) => [...prevWeights, data]);
+            const newWeight = await res.json();
+            // Fetch all weights again to ensure we have the latest data
+            const weightsRes = await fetch('/api/weight');
+            if (weightsRes.ok) {
+                const updatedWeights = await weightsRes.json();
+                setWeights(updatedWeights);
+            }
             setWeight('');
         }
     };
@@ -80,95 +85,96 @@ export default function WeightPage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
-
-            <Card>
-                <CardHeader>
-                    <CardTitle>Enter Today&apos;s Weight</CardTitle>
-                    <CardDescription>Keep track of your weight journey</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="weight">Weight</Label>
-                            <div className="flex space-x-2">
-                                <Input
-                                    id="weight"
-                                    type="number"
-                                    step="0.1"
-                                    placeholder={`Enter your weight in ${unit}`}
-                                    value={weight}
-                                    onChange={(e) => setWeight(e.target.value)}
-                                    className="flex-grow"
-                                    required
-                                />
-                                <Select value={unit} onValueChange={(value: WeightUnit) => handleUnitChange(value)}>
-                                    <SelectTrigger className="w-[80px]">
-                                        <SelectValue placeholder="Unit" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="kg">kg</SelectItem>
-                                        <SelectItem value="lbs">lbs</SelectItem>
-                                    </SelectContent>
-                                </Select>
+            <div className="space-y-8">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Enter Today&apos;s Weight</CardTitle>
+                        <CardDescription>Keep track of your weight journey</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="weight">Weight</Label>
+                                <div className="flex space-x-2">
+                                    <Input
+                                        id="weight"
+                                        type="number"
+                                        step="0.1"
+                                        placeholder={`Enter your weight in ${unit}`}
+                                        value={weight}
+                                        onChange={(e) => setWeight(e.target.value)}
+                                        className="flex-grow"
+                                        required
+                                    />
+                                    <Select value={unit} onValueChange={(value: WeightUnit) => handleUnitChange(value)}>
+                                        <SelectTrigger className="w-[80px]">
+                                            <SelectValue placeholder="Unit" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="kg">kg</SelectItem>
+                                            <SelectItem value="lbs">lbs</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
                             </div>
-                        </div>
 
-                        <Button type="submit">Save Weight</Button>
-                    </form>
-                </CardContent>
-            </Card>
+                            <Button type="submit">Save Weight</Button>
+                        </form>
+                    </CardContent>
+                </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Weight History</CardTitle>
-                    <CardDescription>Your weight trend over time</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ChartContainer
-                        config={{
-                            weight: {
-                                label: `Weight (${unit})`,
-                                color: "hsl(var(--chart-1))",
-                            },
-                        }}
-                        className="h-[300px]"
-                    >
-                        <ResponsiveContainer width="100%" height="100%">
-                            <LineChart data={weights}>
-                                <XAxis
-                                    dataKey="date"
-                                    tickFormatter={(value) => new Date(value).toLocaleDateString()}
-                                />
-                                <YAxis
-                                    domain={['dataMin - 1', 'dataMax + 1']}
-                                    tickFormatter={(value) => value}
-                                />
-                                <ChartTooltip
-                                    content={
-                                        <ChartTooltipContent
-                                            labelFormatter={(value) => {
-                                                return new Date(value).toLocaleDateString("en-US", {
-                                                    day: "numeric",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                })
-                                            }}
-                                        />
-                                    }
-                                    cursor={false}
-                                />
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Weight History</CardTitle>
+                        <CardDescription>Your weight trend over time</CardDescription>
+                    </CardHeader>
+                    <CardContent className="w-full p-0">
+                        <ChartContainer
+                            config={{
+                                weight: {
+                                    label: `Weight (${unit})`,
+                                    color: "hsl(var(--chart-1))",
+                                },
+                            }}
+                            className="h-[300px] w-full"
+                        >
+                            <ResponsiveContainer width="100%" height="100%">
+                                <LineChart data={weights}>
+                                    <XAxis
+                                        dataKey="date"
+                                        tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                                    />
+                                    <YAxis
+                                        domain={['dataMin - 1', 'dataMax + 1']}
+                                        tickFormatter={(value) => value}
+                                    />
+                                    <ChartTooltip
+                                        content={
+                                            <ChartTooltipContent
+                                                labelFormatter={(value) => {
+                                                    return new Date(value).toLocaleDateString("en-US", {
+                                                        day: "numeric",
+                                                        month: "long",
+                                                        year: "numeric",
+                                                    })
+                                                }}
+                                            />
+                                        }
+                                        cursor={false}
+                                    />
 
-                                <Line
-                                    type="monotone"
-                                    dataKey="weight"
-                                    strokeWidth={2}
-                                    activeDot={{ r: 8 }}
-                                />
-                            </LineChart>
-                        </ResponsiveContainer>
-                    </ChartContainer>
-                </CardContent>
-            </Card>
+                                    <Line
+                                        type="monotone"
+                                        dataKey="weight"
+                                        strokeWidth={2}
+                                        activeDot={{ r: 8 }}
+                                    />
+                                </LineChart>
+                            </ResponsiveContainer>
+                        </ChartContainer>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }

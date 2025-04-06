@@ -16,6 +16,19 @@ export async function POST(request: NextRequest) {
     }
 
     try {
+        // Check if user has a profile
+        const userProfile = await prisma.profile.findUnique({
+            where: { userId: session.user.id },
+        });
+
+        if (!userProfile) {
+            return NextResponse.json({ 
+                error: 'Profile not found',
+                message: 'Please complete your profile before generating a training plan',
+                code: 'PROFILE_REQUIRED'
+            }, { status: 400 });
+        }
+
         const { prompt } = await request.json();
 
         if (!prompt) {
