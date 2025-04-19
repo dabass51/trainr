@@ -290,5 +290,57 @@
       "contact": "Kontakt"
     },
     "copyright": "Alle Rechte vorbehalten."
+  },
+  "features": {
+    "empower": "Stärken",
+    "title": "Transformieren Sie Ihr Training mit KI-Technologie",
+    "description": "Erleben Sie die Zukunft des Ausdauertrainings mit unseren personalisierten Plänen. Unsere KI-gesteuerte Analyse stellt sicher, dass Sie auf Kurs bleiben und Ihre Ziele erreichen.",
+    "tailored": {
+      "title": "Maßgeschneiderte Trainingspläne nur für Sie",
+      "description": "Erhalten Sie individuell angepasste Trainingspläne, die sich Ihren Bedürfnissen anpassen."
+    },
+    "analytics": {
+      "title": "Fortschrittliche KI-gesteuerte Leistungsanalyse",
+      "description": "Nutzen Sie modernste Analysen zur Optimierung Ihrer Leistung."
+    },
+    "tracking": {
+      "title": "Umfassende Fortschrittsverfolgung für Ihre Reise",
+      "description": "Überwachen Sie Ihren Fortschritt und feiern Sie Ihre Meilensteine."
+    },
+    "learnMore": "Mehr erfahren",
+    "signUp": "Jetzt registrieren"
+  },
+  "elevate": {
+    "subtitle": "Steigern",
+    "title": "Entfalten Sie Ihr Potenzial mit intelligenten Trainingsplänen",
+    "description": "Erleben Sie verbesserte Leistung mit personalisierten Trainingsplänen, die auf Ihre Bedürfnisse zugeschnitten sind. Sparen Sie Zeit und treffen Sie fundierte Entscheidungen basierend auf Daten.",
+    "benefits": {
+      "insight": "Erreichen Sie Ihre Ziele schneller mit maßgeschneiderten Trainingseinblicken.",
+      "strategy": "Optimieren Sie Ihr Training mit datengesteuerten Strategien.",
+      "efficiency": "Sparen Sie Zeit und trainieren Sie intelligenter mit unserer App."
+    },
+    "learnMore": "Mehr erfahren",
+    "signUp": "Jetzt registrieren"
+  },
+  "getStarted": {
+    "subtitle": "Start",
+    "title": "Erstellen Sie heute Ihren personalisierten Trainingsplan",
+    "description": "Der Einstieg in unsere App ist einfach und intuitiv. Erstellen Sie einfach ein Konto und beantworten Sie einige Fragen zu Ihren Fitnesszielen. Unsere KI wird dann einen maßgeschneiderten Trainingsplan für Sie erstellen.",
+    "steps": {
+      "download": {
+        "title": "Schritt 1: Registrieren",
+        "description": "Erstellen Sie ein Konto."
+      },
+      "profile": {
+        "title": "Schritt 2: Profil einrichten",
+        "description": "Geben Sie Ihr Fitnesslevel und Ihre Ziele an."
+      },
+      "plan": {
+        "title": "Schritt 3: Trainingsplan erhalten",
+        "description": "Starten Sie noch heute mit Ihrem personalisierten Plan!"
+      }
+    },
+    "learnMore": "Mehr erfahren",
+    "signUp": "Jetzt registrieren"
   }
 } 
