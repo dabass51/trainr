@@ -44,7 +44,7 @@
     "gpx-parse": "^0.10.4",
     "gray-matter": "^4.0.3",
     "leaflet": "^1.9.4",
-    "lucide-react": "^0.412.0",
+    "lucide-react": "^0.501.0",
     "multer": "^1.4.5-lts.1",
     "next": "14.2.5",
     "next-auth": "^4.24.11",

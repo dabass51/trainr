@@ -13,16 +13,16 @@ export function HeroContent() {
         <>
             <Badge
                 variant="outline"
-                className="mb-4 max-w-full text-sm font-normal text-white border-white/20 bg-white/10 backdrop-blur-sm lg:mb-10 lg:py-2 lg:pl-2 lg:pr-5"
+                className="mb-4 max-w-full text-sm font-normal backdrop-blur-sm lg:mb-10 lg:py-2 lg:pl-2 lg:pr-5"
             >
-                <span className="mr-2 flex size-8 shrink-0 items-center justify-center rounded-full bg-white/20">
-                    <Bell className="size-4 text-white" />
+                <span className="mr-2 flex size-8 shrink-0 items-center justify-center rounded-full ">
+                    <Bell className="size-4" />
                 </span>
-                <p className="truncate whitespace-nowrap text-white">
+                <p className="truncate whitespace-nowrap">
                     {t('home.beta')}
                 </p>
             </Badge>
-            <h1 className="mb-6 text-4xl font-bold leading-none tracking-tighter text-white md:text-[7vw] lg:text-8xl">
+            <h1 className="mb-6 text-4xl font-mono leading-none tracking-tighter text-white md:text-[7vw] lg:text-8xl">
                 {t('home.title')}
             </h1>
             <p className="max-w-2xl md:text-[2vw] lg:text-xl">

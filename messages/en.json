@@ -290,5 +290,57 @@
       "contact": "Contact"
     },
     "copyright": "All rights reserved."
+  },
+  "features": {
+    "empower": "Empower",
+    "title": "Transform Your Training with AI Technology",
+    "description": "Experience the future of endurance training with our personalized plans. Our AI-driven analytics ensure you stay on track and achieve your goals.",
+    "tailored": {
+      "title": "Tailored Training Plans Just for You",
+      "description": "Receive customized training plans that adapt to your unique needs."
+    },
+    "analytics": {
+      "title": "Advanced AI-Driven Performance Analytics",
+      "description": "Leverage cutting-edge analytics to optimize your performance."
+    },
+    "tracking": {
+      "title": "Comprehensive Progress Tracking for Your Journey",
+      "description": "Monitor your progress and celebrate your milestones."
+    },
+    "learnMore": "Learn More",
+    "signUp": "Sign Up"
+  },
+  "elevate": {
+    "subtitle": "Elevate",
+    "title": "Unlock Your Potential with Smart Training Plans",
+    "description": "Experience enhanced performance with personalized training plans tailored to your needs. Save time and make informed decisions backed by data.",
+    "benefits": {
+      "insight": "Achieve your goals faster with tailored training insights.",
+      "strategy": "Optimize your training with data-driven strategies.",
+      "efficiency": "Save time and train smarter with our app."
+    },
+    "learnMore": "Learn More",
+    "signUp": "Sign Up"
+  },
+  "getStarted": {
+    "subtitle": "Start",
+    "title": "Create Your Personalized Training Plan Today",
+    "description": "Getting started with our app is simple and intuitive. Just create an account, and answer a few questions about your fitness goals. Our AI will then generate a customized training plan tailored to your needs.",
+    "steps": {
+      "download": {
+        "title": "Step 1: Register",
+        "description": "create an account."
+      },
+      "profile": {
+        "title": "Step 2: Set Up Your Profile",
+        "description": "Provide your fitness level and goals."
+      },
+      "plan": {
+        "title": "Step 3: Receive Your Training Plan",
+        "description": "Start training with your personalized plan today!"
+      }
+    },
+    "learnMore": "Learn More",
+    "signUp": "Sign Up"
   }
 } 

@@ -24,7 +24,7 @@ export async function Header() {
             className="object-contain"
             priority></Image>
         </div>
-        <span className="font-bold text-2xl tracking-wide">Trainr</span>
+        <span className="font-mono text-2xl tracking-wide">Trainingsplatz</span>
       </Link>
 
       <div className="flex items-center gap-4">

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Open_Sans } from "next/font/google";
 import "./globals.css";
 import {ClientSessionProvider} from '@/provider/SessionProvider'
 import {Header} from "@/components/header";
@@ -11,6 +11,12 @@ import { LanguageProvider } from '@/provider/LanguageProvider';
 import { CookieBanner } from '@/components/cookie-banner';
 
 const inter = Inter({ subsets: ["latin"] });
+
+const openSans = Open_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-open-sans',
+});
 
 export const metadata: Metadata = {
   title: "Trainer",
@@ -24,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${openSans.variable} font-sans`}>
         <ClientSessionProvider>
           <ThemeProvider
             attribute="class"
