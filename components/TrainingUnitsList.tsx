@@ -133,7 +133,7 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, activities
         if (current === totalPages) {
             startPage = totalPages - 2;
         }
-        const pageNumbers = [1];
+        const pageNumbers: (number | string)[] = [1];
         if (startPage > 2) {
             pageNumbers.push('ellipsis-start');
         }
