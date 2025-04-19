@@ -17,30 +17,28 @@ export default function ImprintPage({ params: { lang } }: ImprintPageProps) {
         <section className="prose dark:prose-invert max-w-none">
           <h2>{t('imprint.companyDetails')}</h2>
           <p>
-            Your Company Name GmbH<br />
-            Street Name 123<br />
-            12345 City<br />
+            Lakt.at UG<br />
+            Weissenburgstrasse 6<br />
+            50670 Köln<br />
             Germany
           </p>
 
           <h2>{t('imprint.contact')}</h2>
           <p>
-            {t('imprint.phone')}: +49 123 456789<br />
-            {t('imprint.email')}: contact@example.com
+            {t('imprint.email')}: contact@trainingsplatz.com
           </p>
 
           <h2>{t('imprint.management')}</h2>
-          <p>{t('imprint.managingDirector')}: Your Name</p>
+          <p>{t('imprint.managingDirector')}: Heiko Plümer</p>
 
           <h2>{t('imprint.registration')}</h2>
           <p>
-            {t('imprint.registrationCourt')}: Amtsgericht City<br />
-            {t('imprint.registrationNumber')}: HRB 12345<br />
-            {t('imprint.vatId')}: DE123456789
+            {t('imprint.registrationCourt')}: Amtsgericht Köln<br />
+            {t('imprint.registrationNumber')}: HRB 97472
           </p>
 
           <h2>{t('imprint.responsibility')}</h2>
-          <p>{t('imprint.responsibleContent')}: Your Name</p>
+          <p>{t('imprint.responsibleContent')}: Heiko Plümer</p>
 
           <h2>{t('imprint.disputeResolution')}</h2>
           <p>{t('imprint.disputeText')}</p>
