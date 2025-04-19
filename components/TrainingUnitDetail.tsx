@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react';
 import {
     Dialog,
@@ -16,6 +18,7 @@ import {
     Footprints,
     Bike,
 } from 'lucide-react';
+import { useTranslation } from '@/provider/LanguageProvider';
 
 interface TrainingUnit {
     id: string;
@@ -65,6 +68,8 @@ const TrainingUnitDetail: React.FC<TrainingUnitDetailProps> = ({
     onClose,
     onComplete,
 }) => {
+    const { t } = useTranslation();
+
     if (!unit) return null;
 
     const formattedDate = new Date(unit.date).toLocaleDateString(undefined, {
@@ -111,19 +116,19 @@ const TrainingUnitDetail: React.FC<TrainingUnitDetailProps> = ({
                     <div className="flex items-center gap-2 text-sm">
                         <Activity className="h-4 w-4 text-gray-500" />
                         <span className={`px-2 py-1 rounded ${getIntensityColor(unit.intensity)}`}>
-                            {unit.intensity} intensity
+                            {unit.intensity} {t('trainingUnits.detail.intensity')}
                         </span>
                     </div>
 
                     {/* Description */}
                     <div className="space-y-2">
-                        <h4 className="font-medium">Description</h4>
+                        <h4 className="font-medium">{t('trainingUnits.detail.description')}</h4>
                         <p className="text-sm text-gray-600">{unit.description}</p>
                     </div>
 
                     {/* Instructions */}
                     <div className="space-y-2">
-                        <h4 className="font-medium">Instructions</h4>
+                        <h4 className="font-medium">{t('trainingUnits.detail.instructions')}</h4>
                         <p className="text-sm text-gray-600">{unit.instruction}</p>
                     </div>
 

@@ -21,34 +21,40 @@ import Link from "next/link"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import {useState} from "react";
-import {useRouter} from "next/navigation";
+import { useState } from "react"
 import { signIn } from 'next-auth/react'
-
 
 export function Signin() {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
+  const [success, setSuccess] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsLoading(true)
     setError(null)
+    setSuccess(false)
 
-    const result = await signIn('credentials', {
-      redirect: false,
-      email,
-      password,
-    })
+    try {
+      const result = await signIn('email', {
+        email,
+        redirect: false,
+        callbackUrl: '/training-units'
+      })
 
-    if (result?.error) {
-      setError(result.error)
-    } else {
-      router.push('/');
-      router.refresh();
+      if (result?.error) {
+        setError(result.error)
+      } else {
+        setSuccess(true)
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
   }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -57,60 +63,57 @@ export function Signin() {
             Sign In
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Or{" "}
-            <Link href="#" className="font-medium text-primary hover:underline" prefetch={false}>
-              sign up in our app
-            </Link>
+            Enter your email to receive a magic link
           </p>
         </div>
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="email" className="block text-sm font-medium text-muted-foreground">
-              Email address
-            </Label>
-            <div className="mt-1">
-              <Input
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                placeholder="you@example.com"
-                className="block w-full appearance-none rounded-md border border-muted px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
-              />
-
+        {success ? (
+          <div className="rounded-md bg-green-50 p-4">
+            <div className="flex">
+              <div className="flex-shrink-0">
+                <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-green-800">
+                  Check your email for the magic link!
+                </p>
+              </div>
             </div>
           </div>
-          <div>
-            <Label htmlFor="password" className="block text-sm font-medium text-muted-foreground">
-              Password
-            </Label>
-            <div className="mt-1">
-              <Input
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                placeholder="Enter your password"
-                className="block w-full appearance-none rounded-md border border-muted px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
-              />
+        ) : (
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <Label htmlFor="email" className="block text-sm font-medium text-muted-foreground">
+                Email address
+              </Label>
+              <div className="mt-1">
+                <Input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  placeholder="you@example.com"
+                  className="block w-full appearance-none rounded-md border border-muted px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                  disabled={isLoading}
+                />
+              </div>
             </div>
-          </div>
-          {error && <p className="text-red-500 mt-4">{error}</p>}
-          <div>
-            <Button
-              type="submit"
-              className="flex w-full justify-center rounded-md bg-primary py-2 px-4 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            >
-              Sign in
-            </Button>
-          </div>
-        </form>
+            {error && <p className="text-red-500 mt-4">{error}</p>}
+            <div>
+              <Button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-primary py-2 px-4 text-sm font-medium text-primary-foreground shadow-sm hover:bg-primary-foreground hover:text-primary focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                disabled={isLoading}
+              >
+                {isLoading ? 'Sending...' : 'Send Magic Link'}
+              </Button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   )

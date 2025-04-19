@@ -33,9 +33,11 @@ enum JobStatus {
 
 model User {
   id            String    @id @default(cuid())
+  name          String?
   email         String?   @unique
   password      String?
   emailVerified DateTime?
+  image         String?
   createdAt     DateTime  @default(now()) @map(name: "created_at")
   updatedAt     DateTime  @updatedAt @map(name: "updated_at")
   profile       Profile?
@@ -47,6 +49,9 @@ model User {
   events        Event[]
   weightEntries WeightEntry[]
   Job           Job[]
+  stravaAccessToken String? @map(name: "strava_access_token")
+  stravaRefreshToken String? @map(name: "strava_refresh_token")
+  stravaTokenExpiresAt DateTime? @map(name: "strava_token_expires_at")
 
   @@map(name: "users")
 }
@@ -90,6 +95,7 @@ model TrainingUnit {
   intensity   String
   date        DateTime
   completed   Boolean  @default(false)
+  activities  Activity[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -165,14 +171,30 @@ model Event {
 }
 
 model Activity {
-  id        String     @id @default(cuid())
-  name      String
+  id            String       @id @default(cuid())
+  name          String
   activityType  ActivityType
-  userId    String
-  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  gpsData   GPSData[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  userId        String
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gpsData       GPSData[]
+  startTime     DateTime
+  endTime       DateTime
+  duration      Int          // in seconds
+  distance      Float?       // in meters
+  avgHeartRate  Int?
+  maxHeartRate  Int?
+  avgPower      Int?        // for cycling
+  maxPower      Int?
+  avgCadence    Int?
+  maxCadence    Int?
+  avgSpeed      Float?      // in m/s
+  maxSpeed      Float?
+  elevationGain Float?      // in meters
+  calories      Int?
+  trainingUnitId String?
+  trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id])
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@map("activities")
 }

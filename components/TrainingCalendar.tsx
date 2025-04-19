@@ -11,6 +11,8 @@ import {
 import { useRouter } from 'next/navigation';
 import { format } from "date-fns";
 import './calendar.css';
+import { ActivityIndicator } from "@/components/ActivityIndicator";
+import { ActivityType } from "@prisma/client";
 
 interface TrainingUnit {
     id: string;
@@ -27,8 +29,18 @@ interface TrainingUnit {
     eventUrl?: string;
 }
 
+interface Activity {
+    id: string;
+    name: string;
+    activityType: ActivityType;
+    duration: number;
+    distance: number | null;
+    startTime: Date;
+}
+
 interface TrainingCalendarProps {
     trainingUnits: TrainingUnit[];
+    activities?: Activity[];
 }
 
 // Map training types to icons and colors
@@ -90,7 +102,7 @@ const typeConfig: Record<TrainingType, { icon: React.ComponentType<any> | (() =>
     }
 };
 
-export default function TrainingCalendar({ trainingUnits }: TrainingCalendarProps) {
+export default function TrainingCalendar({ trainingUnits, activities = [] }: TrainingCalendarProps) {
     const [date, setDate] = useState<Date>(new Date());
     const router = useRouter();
 
@@ -109,68 +121,82 @@ export default function TrainingCalendar({ trainingUnits }: TrainingCalendarProp
         return acc;
     }, {} as Record<string, TrainingUnit[]>);
 
+    // Group activities by date
+    const activitiesByDate = activities.reduce((acc, activity) => {
+        const dateStr = activity.startTime.toISOString().split('T')[0];
+        if (!acc[dateStr]) {
+            acc[dateStr] = [];
+        }
+        acc[dateStr].push(activity);
+        return acc;
+    }, {} as Record<string, Activity[]>);
+
     // Custom day content renderer for calendar view
     const renderDayContent = (day: Date) => {
         const dateStr = format(day, 'yyyy-MM-dd');
         const units = trainingUnitsByDate[dateStr] || [];
-
-        if (units.length === 0) return null;
+        const dayActivities = activitiesByDate[dateStr] || [];
 
         return (
-            <div className="absolute bottom-1 left-1 right-1">
-                <div className="flex flex-wrap gap-1">
-                    {units.map((unit) => {
-                        const typeStyle = typeConfig[unit.type as TrainingType] || {
-                            icon: Dumbbell,
-                            color: '#6b7280'
-                        };
-                        const Icon = typeStyle.icon;
+            <>
+                {units.length > 0 && (
+                    <div className="absolute bottom-1 left-1 right-1">
+                        <div className="flex flex-wrap gap-1">
+                            {units.map((unit) => {
+                                const typeStyle = typeConfig[unit.type as TrainingType] || {
+                                    icon: Dumbbell,
+                                    color: '#6b7280'
+                                };
+                                const Icon = typeStyle.icon;
 
-                        return (
-                            <HoverCard key={unit.id} openDelay={0} closeDelay={0}>
-                                <HoverCardTrigger asChild>
-                                    <div 
-                                        className="cursor-pointer p-1 rounded-full"
-                                        style={{ backgroundColor: typeStyle.color + '33' }}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            router.push(`/training-units/${unit.id}`);
-                                        }}
-                                    >
-                                        <Icon className="h-3 w-3" style={{ color: typeStyle.color }} />
-                                    </div>
-                                </HoverCardTrigger>
-                                <HoverCardContent 
-                                    className="w-80 bg-popover shadow-lg border rounded-lg" 
-                                    side="right" 
-                                    align="start"
-                                    sideOffset={5}
-                                >
-                                    <div className="space-y-2">
-                                        <h4 className="text-sm font-semibold">{unit.type}</h4>
-                                        <p className="text-sm text-muted-foreground break-words">{unit.description}</p>
-                                        <p className="text-sm text-muted-foreground break-words">{unit.instruction}</p>
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <span className="text-xs bg-primary/10 px-2 py-1 rounded">
-                                                {unit.intensity} intensity
-                                            </span>
-                                            <span className="text-xs bg-primary/10 px-2 py-1 rounded">
-                                                {unit.duration} min
-                                            </span>
-                                            {unit.completed && (
-                                                <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 px-2 py-1 rounded">
-                                                    Completed
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </HoverCardContent>
-                            </HoverCard>
-                        );
-                    })}
-                </div>
-            </div>
+                                return (
+                                    <HoverCard key={unit.id} openDelay={0} closeDelay={0}>
+                                        <HoverCardTrigger asChild>
+                                            <div 
+                                                className="cursor-pointer p-1 rounded-full"
+                                                style={{ backgroundColor: typeStyle.color + '33' }}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    e.stopPropagation();
+                                                    router.push(`/training-units/${unit.id}`);
+                                                }}
+                                            >
+                                                <Icon className="h-3 w-3" style={{ color: typeStyle.color }} />
+                                            </div>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent 
+                                            className="w-80 bg-popover shadow-lg border rounded-lg" 
+                                            side="right" 
+                                            align="start"
+                                            sideOffset={5}
+                                        >
+                                            <div className="space-y-2">
+                                                <h4 className="text-sm font-semibold">{unit.type}</h4>
+                                                <p className="text-sm text-muted-foreground break-words">{unit.description}</p>
+                                                <p className="text-sm text-muted-foreground break-words">{unit.instruction}</p>
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <span className="text-xs bg-primary/10 px-2 py-1 rounded">
+                                                        {unit.intensity} intensity
+                                                    </span>
+                                                    <span className="text-xs bg-primary/10 px-2 py-1 rounded">
+                                                        {unit.duration} min
+                                                    </span>
+                                                    {unit.completed && (
+                                                        <span className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100 px-2 py-1 rounded">
+                                                            Completed
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
+                                );
+                            })}
+                        </div>
+                    </div>
+                )}
+                <ActivityIndicator date={day} activities={dayActivities} />
+            </>
         );
     };
 

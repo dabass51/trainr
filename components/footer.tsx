@@ -1,70 +1,39 @@
+'use client'
+
 import {Instagram} from 'lucide-react'
 import { Separator } from '@/components/ui/separator';
-
-const sections = [
-  {
-    title: 'Product',
-    links: [
-      { name: 'Overview', href: '#' },
-      { name: 'Pricing', href: '#' },
-      { name: 'Marketplace', href: '#' },
-      { name: 'Features', href: '#' },
-      { name: 'Integrations', href: '#' },
-      { name: 'Pricing', href: '#' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { name: 'About', href: '#' },
-      { name: 'Team', href: '#' },
-      { name: 'Blog', href: '#' },
-      { name: 'Careers', href: '#' },
-      { name: 'Contact', href: '#' },
-      { name: 'Privacy', href: '#' },
-    ],
-  },
-  {
-    title: 'Resources',
-    links: [
-      { name: 'Help', href: '#' },
-      { name: 'Sales', href: '#' },
-      { name: 'Advertise', href: '#' },
-    ],
-  },
-];
+import { useTranslation } from '@/app/i18n/client';
+import Link from 'next/link';
+import { LanguageSelector } from '@/components/language-selector';
 
 export function Footer() {
+  const { t, lang } = useTranslation();
+  const currentYear = new Date().getFullYear();
+
+  const sections = [
+    {
+      title: t('footer.product'),
+      links: [
+        { name: t('footer.links.overview'), href: '#' },
+        { name: t('footer.links.pricing'), href: '#' },
+        { name: t('footer.links.features'), href: '#' },
+      ],
+    },
+    {
+      title: t('footer.company'),
+      links: [
+        { name: t('footer.links.about'), href: '#' },
+        { name: t('footer.links.team'), href: '#' },
+        { name: t('footer.links.blog'), href: '#' },
+        { name: t('footer.links.contact'), href: '#' },
+      ],
+    }
+  ];
+
   return (
       <section className="py-32">
         <div className="container">
           <footer>
-            <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-              <img
-                  src="https://www.shadcnblocks.com/images/block/logos/shadcn-ui.svg"
-                  alt="logo"
-                  className="mb-8 mr-auto h-7 md:mb-0"
-              />
-              <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                <p className="text-lg font-medium">
-                  Copy the code and make it yours.
-                </p>
-                <div className="flex gap-2">
-                  <a
-                      href="#"
-                      className="inline-flex items-center justify-center rounded-lg bg-primary p-2.5"
-                  >
-                    Hello
-                  </a>
-                  <a
-                      href="#"
-                      className="inline-flex items-center justify-center rounded-lg bg-primary p-2.5"
-                  >
-                    Hello
-                  </a>
-                </div>
-              </div>
-            </div>
             <Separator className="my-14" />
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
               {sections.map((section, sectionIdx) => (
@@ -83,30 +52,43 @@ export function Footer() {
                   </div>
               ))}
               <div>
-                <h3 className="mb-4 font-bold">Legal</h3>
+                <h3 className="mb-4 font-bold">{t('footer.tools')}</h3>
                 <ul className="space-y-4 text-muted-foreground">
                   <li className="font-medium hover:text-primary">
-                    <a href="#">Term of Services</a>
-                  </li>
-                  <li className="font-medium hover:text-primary">
-                    <a href="#">Privacy Policy</a>
+                    <Link href={`/${lang}/blog`}>{t('blog.title')}</Link>
                   </li>
                 </ul>
-                <h3 className="mb-4 mt-8 font-bold">Social</h3>
+              </div>
+              <div>
+                <h3 className="mb-4 font-bold">{t('footer.legal')}</h3>
+                <ul className="space-y-4 text-muted-foreground">
+                  <li className="font-medium hover:text-primary">
+                    <Link href={`/${lang}/terms`}>{t('terms.title')}</Link>
+                  </li>
+                  <li className="font-medium hover:text-primary">
+                    <Link href={`/${lang}/privacy`}>{t('privacy.title')}</Link>
+                  </li>
+                  <li className="font-medium hover:text-primary">
+                    <Link href={`/${lang}/imprint`}>{t('imprint.title')}</Link>
+                  </li>
+                </ul>
+                <h3 className="mb-4 mt-8 font-bold">{t('footer.social')}</h3>
                 <ul className="flex items-center space-x-6 text-muted-foreground">
                   <li className="font-medium hover:text-primary">
                     <a href="#">
                       <Instagram />
                     </a>
                   </li>
-
                 </ul>
               </div>
             </div>
             <Separator className="my-14" />
-            <p className="text-sm text-muted-foreground">
-              © 2024 Lakt.at UG. All rights reserved.
-            </p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-muted-foreground">
+                © {currentYear} Lakt.at UG. {t('footer.copyright')}
+              </p>
+              <LanguageSelector />
+            </div>
           </footer>
         </div>
       </section>

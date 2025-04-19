@@ -19,8 +19,9 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import TrainingUnitDetail from './TrainingUnitDetail';
-import { Eye } from 'lucide-react';
+import { Eye, Activity, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { ActivityType } from '@prisma/client';
 
 interface TrainingUnit {
     id: string;
@@ -37,20 +38,33 @@ interface TrainingUnit {
     eventUrl?: string;
 }
 
+interface Activity {
+    id: string;
+    name: string;
+    activityType: ActivityType;
+    duration: number;
+    distance: number | null;
+    startTime: string;
+    description?: string;
+}
+
 interface TrainingUnitsListProps {
     units: TrainingUnit[];
+    activities: Activity[];
     onComplete: (id: string, completed: boolean) => void;
     onDelete: (id: string) => void;
     onDeleteAll: () => void;
+    onDeleteAllActivities: () => void;
 }
 
 const ITEMS_PER_PAGE = 8;
 
-const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, onComplete, onDelete, onDeleteAll }) => {
+const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, activities, onComplete, onDelete, onDeleteAll, onDeleteAllActivities }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [unitToDelete, setUnitToDelete] = useState<string | null>(null);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showDeleteAllDialog, setShowDeleteAllDialog] = useState(false);
+    const [showDeleteAllActivitiesDialog, setShowDeleteAllActivitiesDialog] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState<TrainingUnit | null>(null);
     const [showDetailDialog, setShowDetailDialog] = useState(false);
     
@@ -62,6 +76,22 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, onComplete
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const currentUnits = sortedUnits.slice(startIndex, endIndex);
+
+    // Get activities for a specific date
+    const getActivitiesForDate = (date: string) => {
+        console.log('Checking activities for date:', date);
+        console.log('All activities:', activities);
+        
+        const trainingUnitDate = new Date(date).toISOString().split('T')[0];
+        const matchingActivities = activities.filter(activity => {
+            const activityDate = new Date(activity.startTime).toISOString().split('T')[0];
+            console.log('Activity date:', activityDate, 'Training unit date:', trainingUnitDate);
+            return activityDate === trainingUnitDate;
+        });
+        
+        console.log('Matching activities:', matchingActivities);
+        return matchingActivities;
+    };
 
     const handleDeleteClick = (id: string) => {
         setUnitToDelete(id);
@@ -81,172 +111,181 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, onComplete
         setShowDetailDialog(true);
     };
 
+    const handleDeleteAllActivities = () => {
+        onDeleteAllActivities();
+        setShowDeleteAllActivitiesDialog(false);
+    };
+
     // Generate page numbers for pagination
     const getPageNumbers = () => {
         const pages = [];
         const maxVisiblePages = 5;
-        const halfVisible = Math.floor(maxVisiblePages / 2);
-        
-        let startPage = Math.max(currentPage - halfVisible, 1);
-        let endPage = Math.min(startPage + maxVisiblePages - 1, totalPages);
-        
-        if (endPage - startPage + 1 < maxVisiblePages) {
-            startPage = Math.max(endPage - maxVisiblePages + 1, 1);
+        const totalPagesArr = Array.from({ length: totalPages }, (_, i) => i + 1);
+        if (totalPages <= maxVisiblePages) {
+            return totalPagesArr;
         }
-
+        const current = currentPage;
+        let startPage = Math.max(current - 1, 2);
+        let endPage = Math.min(current + 1, totalPages - 1);
+        if (current === 1) {
+            endPage = 3;
+        }
+        if (current === totalPages) {
+            startPage = totalPages - 2;
+        }
+        const pageNumbers = [1];
+        if (startPage > 2) {
+            pageNumbers.push('ellipsis-start');
+        }
         for (let i = startPage; i <= endPage; i++) {
-            pages.push(i);
+            if (i > 1 && i < totalPages) {
+                pageNumbers.push(i);
+            }
         }
-        
-        return pages;
+        if (endPage < totalPages - 1) {
+            pageNumbers.push('ellipsis-end');
+        }
+        if (totalPages > 1) {
+            pageNumbers.push(totalPages);
+        }
+        return pageNumbers;
     };
 
     return (
         <div className="space-y-6">
-            {units.length > 0 ? (
-                <>
-                    <div className="flex justify-end">
-                        <Button
-                            variant="destructive"
-                            onClick={() => setShowDeleteAllDialog(true)}
-                            className="mb-4"
-                        >
-                            Delete All Training Units
-                        </Button>
-                    </div>
+            <div className="flex justify-between items-center">
+                <h2 className="text-2xl font-bold">Training Units</h2>
+                <div className="flex gap-2">
+                    <Button variant="outline" onClick={() => setShowDeleteAllActivitiesDialog(true)}>
+                        Delete All Activities
+                    </Button>
+                    <Button variant="outline" onClick={() => setShowDeleteAllDialog(true)}>
+                        Delete All Units
+                    </Button>
+                </div>
+            </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {currentUnits.map((unit) => (
-                            <div
-                                key={unit.id}
-                                className={`border p-4 rounded-md shadow-sm hover:shadow-md transition-shadow duration-200 ${
-                                    unit.isEvent ? 'bg-amber-50 border-amber-200' : unit.completed ? 'bg-green-50 border-green-200' : ''
-                                }`}
-                            >
-                                <h3 className="font-bold text-lg mb-2">
-                                    {unit.isEvent ? '🎉 ' : ''}{unit.isEvent ? unit.eventName : unit.type}
-                                </h3>
-                                <p className="text-sm mb-1">{unit.description}</p>
-                                {!unit.isEvent ? (
-                                    <>
-                                        <p className="text-sm mb-1">Duration: {unit.duration} minutes</p>
-                                        <p className="text-sm mb-1">Instruction: {unit.instruction}</p>
-                                        <p className="text-sm mb-1">Intensity: {unit.intensity}</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        {unit.eventLocation && (
-                                            <p className="text-sm mb-1">Location: {unit.eventLocation}</p>
-                                        )}
-                                        {unit.eventUrl && (
-                                            <a 
-                                                href={unit.eventUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-sm mb-1 text-blue-600 hover:text-blue-800 underline block"
-                                            >
-                                                Event Details
-                                            </a>
-                                        )}
-                                    </>
-                                )}
-                                <p className="text-sm mb-1">Date: {new Date(unit.date).toLocaleDateString()}</p>
-                                {!unit.isEvent && (
-                                    <p className="text-sm mb-3">Status: {unit.completed ? 'Completed' : 'Pending'}</p>
-                                )}
-                                <div className="flex justify-between items-center">
-                                    <div className="flex gap-2">
-                                        {!unit.isEvent && (
-                                            unit.completed ? (
-                                                <button
-                                                    onClick={() => onComplete(unit.id, false)}
-                                                    className="py-1 px-2 bg-yellow-500 text-white rounded text-sm hover:bg-yellow-600 transition-colors duration-200"
-                                                >
-                                                    Uncomplete
-                                                </button>
-                                            ) : (
-                                                <button
-                                                    onClick={() => onComplete(unit.id, true)}
-                                                    className="py-1 px-2 bg-green-500 text-white rounded text-sm hover:bg-green-600 transition-colors duration-200"
-                                                >
-                                                    Complete
-                                                </button>
-                                            )
-                                        )}
-                                        <Link
-                                            href={`/training-units/${unit.id}`}
-                                            className="py-1 px-2 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors duration-200 flex items-center gap-1"
-                                        >
-                                            <Eye className="h-4 w-4" />
-                                            View
-                                        </Link>
-                                    </div>
-                                    <button
-                                        onClick={() => handleDeleteClick(unit.id)}
-                                        className="py-1 px-2 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors duration-200"
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {currentUnits.map((unit) => {
+                    const unitActivities = getActivitiesForDate(unit.date);
+                    return (
+                        <div key={unit.id} className="border rounded-lg p-4 space-y-4">
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <h3 className="font-semibold">{unit.type}</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        {new Date(unit.date).toLocaleDateString()}
+                                    </p>
+                                    {unit.description && (
+                                        <p className="text-sm mt-1 text-gray-700">
+                                            {unit.description}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="flex gap-2">
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleViewDetail(unit)}
                                     >
-                                        Delete
-                                    </button>
+                                        <Eye className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        onClick={() => handleDeleteClick(unit.id)}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                    </Button>
                                 </div>
                             </div>
-                        ))}
-                    </div>
 
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                        <Pagination>
-                            <PaginationContent>
-                                <PaginationItem>
-                                    <PaginationPrevious 
-                                        href="#" 
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            if (currentPage > 1) setCurrentPage(currentPage - 1);
-                                        }}
-                                        aria-disabled={currentPage === 1}
-                                        className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                                    />
-                                </PaginationItem>
-                                
-                                {getPageNumbers().map((pageNum) => (
-                                    <PaginationItem key={pageNum}>
-                                        <PaginationLink
-                                            href="#"
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setCurrentPage(pageNum);
-                                            }}
-                                            isActive={currentPage === pageNum}
-                                        >
-                                            {pageNum}
-                                        </PaginationLink>
+                            {unitActivities.length > 0 && (
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-medium">Activities</h4>
+                                    {unitActivities.map((activity) => (
+                                        <div key={activity.id} className="flex flex-col gap-1 text-sm">
+                                            <div className="flex items-center gap-2">
+                                                <Activity className="h-4 w-4" />
+                                                <span className="font-medium">{activity.name}</span>
+                                                <span className="text-muted-foreground">
+                                                    ({Math.round(activity.duration / 60)} min)
+                                                </span>
+                                            </div>
+                                            {activity.description && (
+                                                <p className="text-muted-foreground text-xs pl-6">
+                                                    {activity.description}
+                                                </p>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            <div className="flex justify-between items-center">
+                                <Button
+                                    variant={unit.completed ? "default" : "outline"}
+                                    onClick={() => onComplete(unit.id, !unit.completed)}
+                                >
+                                    {unit.completed ? "Completed" : "Mark as Complete"}
+                                </Button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious 
+                                href="#" 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (currentPage > 1) setCurrentPage(currentPage - 1);
+                                }}
+                                aria-disabled={currentPage === 1}
+                                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
+                            />
+                        </PaginationItem>
+                        {getPageNumbers().map((pageNum, idx) => {
+                            if (typeof pageNum === 'string') {
+                                return (
+                                    <PaginationItem key={pageNum + idx}>
+                                        <PaginationEllipsis />
                                     </PaginationItem>
-                                ))}
-
-                                <PaginationItem>
-                                    <PaginationNext 
-                                        href="#" 
+                                );
+                            }
+                            return (
+                                <PaginationItem key={pageNum}>
+                                    <PaginationLink
+                                        href="#"
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                                            setCurrentPage(pageNum);
                                         }}
-                                        aria-disabled={currentPage === totalPages}
-                                        className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
-                                    />
+                                        isActive={currentPage === pageNum}
+                                    >
+                                        {pageNum}
+                                    </PaginationLink>
                                 </PaginationItem>
-                            </PaginationContent>
-                        </Pagination>
-                    )}
-                </>
-            ) : (
-                <div className="text-center py-12">
-                    <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
-                        No Training Units Yet
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-400">
-                        Create your first training unit to get started
-                    </p>
-                </div>
+                            );
+                        })}
+                        <PaginationItem>
+                            <PaginationNext 
+                                href="#" 
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (currentPage < totalPages) setCurrentPage(currentPage + 1);
+                                }}
+                                aria-disabled={currentPage === totalPages}
+                                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
             )}
 
             {/* Delete Single Unit Dialog */}
@@ -297,6 +336,32 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, onComplete
                                 onDeleteAll();
                                 setShowDeleteAllDialog(false);
                             }}
+                        >
+                            Yes, Delete All
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            {/* Delete All Activities Dialog */}
+            <Dialog open={showDeleteAllActivitiesDialog} onOpenChange={setShowDeleteAllActivitiesDialog}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete All Activities</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete all activities? This action cannot be undone and will remove all your activity data.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="flex justify-end space-x-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowDeleteAllActivitiesDialog(false)}
+                        >
+                            No, Cancel
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={handleDeleteAllActivities}
                         >
                             Yes, Delete All
                         </Button>

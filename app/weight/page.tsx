@@ -4,7 +4,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, ReferenceArea } from 'recharts';
 import { WeightEntry } from '@prisma/client';
 import { Card, CardTitle, CardDescription, CardHeader,CardContent } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
@@ -15,6 +15,7 @@ import { Select,
     SelectValue } from '@/components/ui/select';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import BMIWidget from '@/components/BMIWidget';
 type WeightUnit = "kg" | "lbs"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 export default function WeightPage() {
@@ -23,6 +24,8 @@ export default function WeightPage() {
     const [weight, setWeight] = useState<string>('');
     const [weights, setWeights] = useState<WeightEntry[]>([]);
     const [unit, setUnit] = useState<'kg' | 'lbs'>('kg');
+    const [userHeight, setUserHeight] = useState<number | null>(null);
+    const [refreshKey, setRefreshKey] = useState(0);
 
     useEffect(() => {
         const fetchWeights = async (): Promise<void> => {
@@ -33,6 +36,17 @@ export default function WeightPage() {
             }
         };
         fetchWeights();
+    }, []);
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            const res = await fetch('/api/profile');
+            if (res.ok) {
+                const profile = await res.json();
+                setUserHeight(profile.height ?? null);
+            }
+        };
+        fetchProfile();
     }, []);
 
     const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -56,6 +70,7 @@ export default function WeightPage() {
                 setWeights(updatedWeights);
             }
             setWeight('');
+            setRefreshKey((k) => k + 1);
         }
     };
 
@@ -69,10 +84,22 @@ export default function WeightPage() {
         }
     };
 
-    // const chartData = weights.map((entry: WeightEntry) => ({
-    //     date: format(new Date(entry.date), 'yyyy-MM-dd'),
-    //     weight: entry.unit === 'kg' ? entry.weight : entry.weight / 2.205,
-    // }));
+    // Compute BMI zone weight thresholds for the user's height
+    let bmiZones: { label: string; y1: number; y2: number; color: string; labelColor: string }[] = [];
+    let maxZoneWeight = 0;
+    if (userHeight) {
+        const h = userHeight / 100;
+        const w18_5 = 18.5 * h * h;
+        const w25 = 25 * h * h;
+        const w30 = 30 * h * h;
+        maxZoneWeight = w30 + 20; // add margin for obese zone
+        bmiZones = [
+            { label: 'Underweight', y1: 0, y2: w18_5, color: '#b3e0ff', labelColor: '#0077b6' },
+            { label: 'Normal', y1: w18_5, y2: w25, color: '#d4f8e8', labelColor: '#009e60' },
+            { label: 'Overweight', y1: w25, y2: w30, color: '#fff3cd', labelColor: '#b8860b' },
+            { label: 'Obese', y1: w30, y2: maxZoneWeight, color: '#ffd6d6', labelColor: '#d90429' },
+        ];
+    }
 
     if (status === 'loading') {
         return <div>Loading...</div>;
@@ -140,13 +167,27 @@ export default function WeightPage() {
                         >
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={weights}>
+                                    {/* BMI ZONES as background */}
+                                    {bmiZones.map((zone) => (
+                                        <ReferenceArea
+                                            key={zone.label}
+                                            y1={zone.y1}
+                                            y2={zone.y2}
+                                            fill={zone.color}
+                                            fillOpacity={0.3}
+                                            label={{ value: zone.label, position: 'insideTopLeft', fill: zone.labelColor, fontSize: 12 }}
+                                            stroke={zone.labelColor}
+                                            strokeOpacity={0.2}
+                                        />
+                                    ))}
                                     <XAxis
                                         dataKey="date"
                                         tickFormatter={(value) => new Date(value).toLocaleDateString()}
                                     />
                                     <YAxis
-                                        domain={['dataMin - 1', 'dataMax + 1']}
+                                        domain={userHeight ? [0, Math.max(maxZoneWeight, ...weights.map(w => w.weight))] : ['dataMin - 1', 'dataMax + 1']}
                                         tickFormatter={(value) => value}
+                                        label={{ value: `Weight (${unit})`, angle: -90, position: 'insideLeft' }}
                                     />
                                     <ChartTooltip
                                         content={
@@ -162,7 +203,6 @@ export default function WeightPage() {
                                         }
                                         cursor={false}
                                     />
-
                                     <Line
                                         type="monotone"
                                         dataKey="weight"
@@ -174,6 +214,7 @@ export default function WeightPage() {
                         </ChartContainer>
                     </CardContent>
                 </Card>
+                <BMIWidget refreshKey={refreshKey} />
             </div>
         </div>
     );

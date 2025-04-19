@@ -1,5 +1,9 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { Loader2 } from 'lucide-react';
 
 interface TrainingUnit {
     id: string;
@@ -18,16 +22,35 @@ interface TrainingUnitsProps {
 }
 
 const TrainingUnits: React.FC<TrainingUnitsProps> = ({ prompt, onGeneratePlan }) => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
+    const router = useRouter();
     const [units, setUnits] = useState<TrainingUnit[]>([]);
     const [isGenerating, setIsGenerating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/auth/signin');
+        }
+    }, [status, router]);
 
     useEffect(() => {
         if (session) {
             fetchTrainingUnits();
         }
     }, [session]);
+
+    if (status === 'loading') {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
+
+    if (status === 'unauthenticated') {
+        return null;
+    }
 
     const fetchTrainingUnits = async () => {
         const response = await fetch('/api/training-units');

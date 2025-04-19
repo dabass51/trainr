@@ -1,0 +1,294 @@
+{
+  "navigation": {
+    "home": "Home",
+    "trainings": "Trainings",
+    "weight": "Weight",
+    "events": "Events",
+    "activities": "Activities",
+    "profile": "Profile",
+    "upload": "Upload",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "blog": "Blog"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign In",
+      "description": "Enter your email to receive a magic link",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "you@example.com",
+      "submitButton": "Send Magic Link",
+      "sendingButton": "Sending...",
+      "successMessage": "Check your email for the magic link!"
+    },
+    "verifyRequest": {
+      "title": "Check your email",
+      "description": "A sign in link has been sent to your email address.",
+      "instruction": "Click the link in the email to sign in.",
+      "redirectInfo": "After signing in, you'll be taken to your training units.",
+      "spamNote": "If you don't see the email, check your spam folder."
+    }
+  },
+  "profile": {
+    "title": "Your Profile",
+    "description": "Complete your profile to get personalized training plans",
+    "form": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "dateOfBirth": "Date of Birth",
+      "gender": "Gender",
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female",
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      },
+      "height": "Height (cm)",
+      "weight": "Weight (kg)",
+      "fitnessLevel": "Fitness Level",
+      "fitnessLevels": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced"
+      },
+      "trainingHistory": "Training History",
+      "availableTime": "Available Training Time",
+      "submit": "Save Changes",
+      "saving": "Saving..."
+    }
+  },
+  "activities": {
+    "title": "Activities",
+    "addActivity": "Add Activity",
+    "filterByType": "Filter by type",
+    "types": {
+      "all": "All Activities",
+      "running": "Running",
+      "cycling": "Cycling",
+      "swimming": "Swimming",
+      "triathlon": "Triathlon"
+    },
+    "details": {
+      "duration": "Duration",
+      "distance": "Distance",
+      "heartRate": {
+        "avg": "Avg Heart Rate",
+        "max": "Max Heart Rate"
+      },
+      "elevation": "Elevation Gain"
+    }
+  },
+  "home": {
+    "beta": "Start our beta program now",
+    "title": "Unlock Your Potential with AI-Generated Training Plans",
+    "description": "Transform your fitness journey with personalized, AI-powered training plans. Get workouts tailored to your goals, lifestyle, and progress — your perfect training partner, always adapting to help you succeed."
+  },
+  "trainingUnits": {
+    "title": "Training Units",
+    "profileRequired": {
+      "title": "Profile Required",
+      "description": "Please complete your profile before generating a training plan.",
+      "button": "Complete Profile"
+    },
+    "generating": {
+      "title": "Generating your training plan...",
+      "description": "This may take a few moments. We're using AI to create a personalized plan for you."
+    },
+    "completed": {
+      "title": "Training Plan Generated",
+      "description": "Your new training plan has been created and is ready to view below."
+    },
+    "chat": {
+      "placeholder": "Enter your request here (e.g., 'Generate a 7-day training plan')",
+      "generating": "Generating Plan...",
+      "submit": "Submit Prompt"
+    },
+    "quickActions": "Quick Actions",
+    "detail": {
+      "description": "Description",
+      "instructions": "Instructions",
+      "intensity": "intensity"
+    },
+    "listView": "List",
+    "calendarView": "Calendar"
+  },
+  "common": {
+    "close": "Close",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "morePages": "More pages",
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending"
+    },
+    "time": {
+      "minutes": "minutes"
+    },
+    "actions": {
+      "markComplete": "Mark as Complete",
+      "markIncomplete": "Mark as Incomplete"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Latest insights and updates about training and fitness",
+    "categories": {
+      "all": "All Posts",
+      "training": "Training",
+      "nutrition": "Nutrition",
+      "motivation": "Motivation",
+      "technology": "Technology"
+    },
+    "readMore": "Read More",
+    "publishedOn": "Published on",
+    "category": "Category",
+    "readingTime": "min read",
+    "relatedPosts": "Related Posts",
+    "backToOverview": "Back to Blog"
+  },
+  "imprint": {
+    "title": "Imprint",
+    "companyDetails": "Company Details",
+    "contact": "Contact",
+    "phone": "Phone",
+    "email": "Email",
+    "management": "Management",
+    "managingDirector": "Managing Director",
+    "registration": "Registration",
+    "registrationCourt": "Registration Court",
+    "registrationNumber": "Registration Number",
+    "vatId": "VAT ID",
+    "responsibility": "Responsibility for Content",
+    "responsibleContent": "Responsible for content according to § 55 Abs. 2 RStV",
+    "disputeResolution": "EU Dispute Resolution",
+    "disputeText": "The European Commission provides a platform for online dispute resolution (ODR): https://ec.europa.eu/consumers/odr. Our email address can be found above in the imprint. We are not willing or obliged to participate in dispute resolution proceedings before a consumer arbitration board."
+  },
+  "terms": {
+    "title": "Terms and Conditions",
+    "scope": {
+      "title": "1. Scope",
+      "content": "These General Terms and Conditions govern the legal relationship between us and our customers. They apply to all services we provide through our platform."
+    },
+    "contract": {
+      "title": "2. Contract Formation",
+      "content": "The contract between us is formed when we confirm your registration or order. The services described on our website constitute a non-binding invitation to treat."
+    },
+    "prices": {
+      "title": "3. Prices and Services",
+      "content": "All prices shown include statutory VAT. We reserve the right to adjust our prices and services at any time. Changes will be communicated to customers in advance."
+    },
+    "payment": {
+      "title": "4. Payment Terms",
+      "content": "Payment is due immediately upon conclusion of the contract. We offer various payment methods which are displayed during the ordering process."
+    },
+    "delivery": {
+      "title": "5. Service Delivery",
+      "content": "Access to our services is granted immediately after successful payment processing. For physical goods, delivery times will be communicated separately."
+    },
+    "warranty": {
+      "title": "6. Warranty",
+      "content": "Statutory warranty rights apply. We strive to ensure high availability of our services but cannot guarantee uninterrupted access."
+    },
+    "liability": {
+      "title": "7. Liability",
+      "content": "We are liable without limitation for damages resulting from injury to life, body, or health, in case of intent and gross negligence, and according to the Product Liability Act."
+    },
+    "privacy": {
+      "title": "8. Data Protection",
+      "content": "We process personal data in accordance with our Privacy Policy and applicable data protection laws."
+    },
+    "jurisdiction": {
+      "title": "9. Applicable Law and Jurisdiction",
+      "content": "German law applies exclusively. For merchants, legal entities under public law, or special funds under public law, the exclusive place of jurisdiction is our registered office."
+    },
+    "severability": {
+      "title": "10. Severability Clause",
+      "content": "Should individual provisions of these Terms and Conditions be invalid, this shall not affect the validity of the remaining provisions."
+    }
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "responsible": {
+      "title": "Responsible Party",
+      "content": "Your Company Name GmbH\nStreet Name 123\n12345 City\nGermany\n\nEmail: contact@example.com\nPhone: +49 123 456789"
+    },
+    "overview": {
+      "title": "Overview",
+      "content": "This privacy policy explains how we collect, use, and protect your personal data when you use our website and services. We take your privacy seriously and are committed to protecting your personal information in accordance with applicable data protection laws, particularly the EU General Data Protection Regulation (GDPR)."
+    },
+    "data": {
+      "title": "Personal Data We Process",
+      "content": "We collect and process the following personal data:\n- Basic account information (name, email)\n- Profile information (age, gender, height, weight)\n- Training data (activities, workouts, performance metrics)\n- Technical data (IP address, browser type, device information)\n- Usage data (how you interact with our services)"
+    },
+    "legal": {
+      "title": "Legal Basis",
+      "content": "We process your personal data based on:\n- Your consent\n- Performance of our contract with you\n- Our legitimate interests\n- Legal obligations we must comply with"
+    },
+    "collection": {
+      "title": "How We Collect Data",
+      "content": "We collect personal data when you:\n- Create an account\n- Complete your profile\n- Upload training data\n- Use our services\n- Connect third-party services (e.g., Strava)\n- Contact our support"
+    },
+    "cookies": {
+      "title": "Cookies and Tracking",
+      "content": "We use cookies and similar technologies to improve your experience and analyze how our services are used. You can control cookie settings through your browser preferences."
+    },
+    "analytics": {
+      "title": "Analytics and Performance",
+      "content": "We use analytics tools to understand how our services are used and to improve them. This includes analyzing training patterns and user behavior to enhance our AI-powered recommendations."
+    },
+    "thirdParty": {
+      "title": "Third-Party Services",
+      "content": "We may share data with trusted third parties who assist us in operating our website, conducting our business, or serving our users. All third parties are obligated to keep your information confidential."
+    },
+    "rights": {
+      "title": "Your Rights",
+      "content": "Under GDPR, you have the right to:\n- Access your personal data\n- Correct inaccurate data\n- Request deletion of your data\n- Object to processing\n- Data portability\n- Withdraw consent\n\nTo exercise these rights, please contact us at contact@example.com"
+    },
+    "changes": {
+      "title": "Changes to This Policy",
+      "content": "We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page and updating the effective date."
+    },
+    "contact": {
+      "title": "Contact Us",
+      "content": "If you have any questions about this privacy policy or our data practices, please contact us at:\n\nYour Company Name GmbH\nData Protection Officer\nEmail: privacy@example.com"
+    }
+  },
+  "cookies": {
+    "banner": {
+      "message": "We use cookies to enhance your experience. Choose which cookies you accept.",
+      "customize": "Customize",
+      "acceptAll": "Accept All",
+      "rejectAll": "Reject All"
+    },
+    "preferences": {
+      "title": "Cookie Preferences",
+      "description": "Manage your cookie preferences below.",
+      "necessary": "Necessary Cookies",
+      "necessaryDescription": "These cookies are required for the website to function and cannot be disabled.",
+      "analytics": "Analytics Cookies",
+      "analyticsDescription": "These cookies help us understand how visitors interact with our website.",
+      "marketing": "Marketing Cookies",
+      "marketingDescription": "These cookies are used to deliver personalized advertisements.",
+      "save": "Save Preferences",
+      "rejectAll": "Reject All"
+    }
+  },
+  "footer": {
+    "product": "Product",
+    "company": "Company",
+    "tools": "Tools",
+    "legal": "Legal",
+    "social": "Social",
+    "links": {
+      "overview": "Overview",
+      "pricing": "Pricing",
+      "features": "Features",
+      "about": "About",
+      "team": "Team",
+      "blog": "Blog",
+      "contact": "Contact"
+    },
+    "copyright": "All rights reserved."
+  }
+} 

@@ -14,6 +14,8 @@ import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
 import { useToast } from "@/hooks/use-toast"
 import { QuickPrompts } from '@/components/QuickPrompts';
+import { ActivityType } from '@prisma/client';
+import { useTranslation } from '@/provider/LanguageProvider';
 
 interface TrainingUnit {
     id: string;
@@ -26,6 +28,15 @@ interface TrainingUnit {
     completed: boolean;
 }
 
+interface Activity {
+    id: string;
+    name: string;
+    activityType: ActivityType;
+    duration: number;
+    distance: number | null;
+    startTime: string;
+}
+
 type JobStatus = 'IN_PROGRESS' | 'PENDING' | 'COMPLETED' | 'FAILED';
 
 interface Job {
@@ -36,7 +47,9 @@ interface Job {
 export default function TrainingUnitsPage() {
     const { data: session, status } = useSession();
     const router = useRouter();
+    const { t } = useTranslation();
     const [units, setUnits] = useState<TrainingUnit[]>([]);
+    const [activities, setActivities] = useState<Activity[]>([]);
     const [isCalendarView, setIsCalendarView] = useState(() => {
         if (typeof window !== 'undefined') {
             const saved = localStorage.getItem('trainingViewMode');
@@ -86,6 +99,7 @@ export default function TrainingUnitsPage() {
     useEffect(() => {
         if (session) {
             fetchTrainingUnits();
+            fetchActivities();
         }
     }, [session]);
 
@@ -150,6 +164,14 @@ export default function TrainingUnitsPage() {
         }
     };
 
+    const fetchActivities = async () => {
+        const response = await fetch('/api/activities');
+        if (response.ok) {
+            const data = await response.json();
+            setActivities(data);
+        }
+    };
+
     const handleComplete = async (id: string, completed: boolean) => {
         const response = await fetch('/api/training-units', {
             method: 'PUT',
@@ -197,6 +219,26 @@ export default function TrainingUnitsPage() {
             toast({
                 title: "Error",
                 description: "Failed to delete all training units",
+                variant: "destructive",
+            });
+        }
+    };
+
+    const handleDeleteAllActivities = async () => {
+        const response = await fetch('/api/activities?deleteAll=true', {
+            method: 'DELETE',
+        });
+
+        if (response.ok) {
+            fetchActivities();
+            toast({
+                title: "Success",
+                description: "All activities have been deleted.",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: "Failed to delete all activities",
                 variant: "destructive",
             });
         }
@@ -281,20 +323,20 @@ export default function TrainingUnitsPage() {
     }
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold mb-6">Training Units</h1>
+        <div className="container py-10">
+            <h1 className="text-3xl font-bold mb-6">{t('trainingUnits.title')}</h1>
 
             {showProfileAlert && (
                 <Alert className="mb-6">
-                    <AlertTitle>Profile Required</AlertTitle>
+                    <AlertTitle>{t('trainingUnits.profileRequired.title')}</AlertTitle>
                     <AlertDescription>
-                        Please complete your profile before generating a training plan.{' '}
+                        {t('trainingUnits.profileRequired.description')}
                         <Button 
                             variant="link" 
                             className="p-0 h-auto font-semibold text-primary hover:underline"
                             onClick={() => router.push('/profile')}
                         >
-                            Complete Profile
+                            {t('trainingUnits.profileRequired.button')}
                         </Button>
                     </AlertDescription>
                 </Alert>
@@ -306,11 +348,11 @@ export default function TrainingUnitsPage() {
                     <CardContent className="pt-6">
                         <div className="flex items-center gap-4 mb-4">
                             <Loader2 className="h-5 w-5 animate-spin" />
-                            <p className="text-sm font-medium">Generating your training plan...</p>
+                            <p className="text-sm font-medium">{t('trainingUnits.generating.title')}</p>
                         </div>
                         <Progress value={progress} className="h-2" />
                         <p className="text-sm text-muted-foreground mt-2">
-                            This may take a few moments. We&apos;re using AI to create a personalized plan for you.
+                            {t('trainingUnits.generating.description')}
                         </p>
                     </CardContent>
                 </Card>
@@ -318,9 +360,9 @@ export default function TrainingUnitsPage() {
 
             {job?.status === 'COMPLETED' && (
                 <Alert className="mb-6" variant="default">
-                    <AlertTitle>Training Plan Generated</AlertTitle>
+                    <AlertTitle>{t('trainingUnits.completed.title')}</AlertTitle>
                     <AlertDescription>
-                        Your new training plan has been created and is ready to view below.
+                        {t('trainingUnits.completed.description')}
                     </AlertDescription>
                 </Alert>
             )}
@@ -333,7 +375,7 @@ export default function TrainingUnitsPage() {
 
             {/* Quick Prompts */}
             <div className="mt-4">
-                <h2 className="text-lg font-semibold mb-3">Quick Actions</h2>
+                <h2 className="text-lg font-semibold mb-3">{t('trainingUnits.quickActions')}</h2>
                 <QuickPrompts onPromptSelect={handleGeneratePlan} />
             </div>
 
@@ -344,26 +386,34 @@ export default function TrainingUnitsPage() {
                     onClick={() => setIsCalendarView(false)}
                 >
                     <List className="h-4 w-4 mr-2"/>
-                    List
+                    {t('trainingUnits.listView')}
                 </Button>
                 <Button
                     variant={isCalendarView ? 'default' : 'secondary'}
                     onClick={() => setIsCalendarView(true)}
                 >
                     <CalendarIcon className="h-4 w-4 mr-2"/>
-                    Calendar
+                    {t('trainingUnits.calendarView')}
                 </Button>
             </div>
 
             {/* Render either List or Calendar based on the view */}
             {isCalendarView ? (
-                <TrainingCalendar trainingUnits={units} />
+                <TrainingCalendar 
+                    trainingUnits={units} 
+                    activities={activities.map(activity => ({
+                        ...activity,
+                        startTime: new Date(activity.startTime)
+                    }))}
+                />
             ) : (
                 <TrainingUnitsList 
                     units={units} 
+                    activities={activities}
                     onComplete={handleComplete} 
                     onDelete={handleDelete} 
                     onDeleteAll={handleDeleteAll}
+                    onDeleteAllActivities={handleDeleteAllActivities}
                 />
             )}
 

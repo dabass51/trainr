@@ -15,6 +15,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from 'lucide-react';
 
 interface ProfileData {
     firstName: string;
@@ -29,7 +30,7 @@ interface ProfileData {
 }
 
 const ProfileForm: React.FC = () => {
-    const { data: session } = useSession();
+    const { data: session, status } = useSession();
     const router = useRouter();
     const { toast } = useToast();
     const [profile, setProfile] = useState<ProfileData>({
@@ -43,6 +44,12 @@ const ProfileForm: React.FC = () => {
         trainingHistory: '',
         availableTrainingTime: '',
     });
+
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/auth/signin');
+        }
+    }, [status, router]);
 
     useEffect(() => {
         if (session) {
@@ -101,6 +108,18 @@ const ProfileForm: React.FC = () => {
             });
         }
     };
+
+    if (status === 'loading') {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <Loader2 className="h-8 w-8 animate-spin" />
+            </div>
+        );
+    }
+
+    if (status === 'unauthenticated') {
+        return null;
+    }
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">

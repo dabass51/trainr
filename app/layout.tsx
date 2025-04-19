@@ -6,6 +6,9 @@ import {Header} from "@/components/header";
 import {Footer} from "@/components/footer";
 import { JobProvider } from '@/provider/JobProvider';
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from "@/components/theme-provider";
+import { LanguageProvider } from '@/provider/LanguageProvider';
+import { CookieBanner } from '@/components/cookie-banner';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,16 +23,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-      <ClientSessionProvider>
-          <JobProvider>
-          <Header></Header>
-            {children}
-          <Footer></Footer>
-          </JobProvider>
-          <Toaster />
-      </ClientSessionProvider>
+        <ClientSessionProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <LanguageProvider>
+              <JobProvider>
+                <Header />
+                {children}
+                <Footer />
+              </JobProvider>
+              <CookieBanner />
+            </LanguageProvider>
+            <Toaster />
+          </ThemeProvider>
+        </ClientSessionProvider>
       </body>
     </html>
   );
