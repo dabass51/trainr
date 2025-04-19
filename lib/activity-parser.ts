@@ -1,4 +1,4 @@
-import { FitParser } from 'fit-file-parser';
+const FitParser = require('fit-file-parser').default;
 import { DOMParser } from 'xmldom';
 import { gpx } from '@tmcw/togeojson';
 import { ActivityType } from '@prisma/client';

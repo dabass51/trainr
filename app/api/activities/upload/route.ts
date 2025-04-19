@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/lib/auth";
 import { prisma } from '@/lib/prisma';
 import { parseFitFile, parseGpxFile } from '@/lib/activity-parser';
+import { ActivityType } from '@prisma/client';
 
 export async function POST(request: NextRequest) {
   const session = await getServerSession(authOptions);
@@ -14,15 +15,17 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const activityType = formData.get('activityType') as string;
+    const activityTypeStr = formData.get('activityType') as string;
     
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 });
     }
 
-    if (!activityType) {
-      return NextResponse.json({ error: 'Activity type is required' }, { status: 400 });
+    if (!activityTypeStr || !Object.values(ActivityType).includes(activityTypeStr as ActivityType)) {
+      return NextResponse.json({ error: 'Valid activity type is required' }, { status: 400 });
     }
+
+    const activityType = activityTypeStr as ActivityType;
 
     // Check file type
     const fileType = file.name.split('.').pop()?.toLowerCase();
