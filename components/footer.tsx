@@ -11,23 +11,23 @@ export function Footer() {
   const currentYear = new Date().getFullYear();
 
   const sections = [
-    {
-      title: t('footer.product'),
-      links: [
-        { name: t('footer.links.overview'), href: '#' },
-        { name: t('footer.links.pricing'), href: '#' },
-        { name: t('footer.links.features'), href: '#' },
-      ],
-    },
-    {
-      title: t('footer.company'),
-      links: [
-        { name: t('footer.links.about'), href: '#' },
-        { name: t('footer.links.team'), href: '#' },
-        { name: t('footer.links.blog'), href: '#' },
-        { name: t('footer.links.contact'), href: '#' },
-      ],
-    }
+    // {
+    //   title: t('footer.product'),
+    //   links: [
+    //     { name: t('footer.links.overview'), href: '#' },
+    //     { name: t('footer.links.pricing'), href: '#' },
+    //     { name: t('footer.links.features'), href: '#' },
+    //   ],
+    // },
+    // {
+    //   title: t('footer.company'),
+    //   links: [
+    //     { name: t('footer.links.about'), href: '#' },
+    //     { name: t('footer.links.team'), href: '#' },
+    //     { name: t('footer.links.blog'), href: '#' },
+    //     { name: t('footer.links.contact'), href: '#' },
+    //   ],
+    // }
   ];
 
   return (

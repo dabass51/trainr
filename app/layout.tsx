@@ -9,6 +9,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider";
 import { LanguageProvider } from '@/provider/LanguageProvider';
 import { CookieBanner } from '@/components/cookie-banner';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,6 +34,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-CVDK2K2TGP"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-CVDK2K2TGP');
+          `}
+        </Script>
+      </head>
       <body className={`${inter.className} ${openSans.variable} font-sans`}>
         <ClientSessionProvider>
           <ThemeProvider
