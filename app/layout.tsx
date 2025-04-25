@@ -21,6 +21,9 @@ const openSans = Open_Sans({
 export const metadata: Metadata = {
   title: "Trainer",
   description: "Unleash the Power of Ai to build manage your training",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
