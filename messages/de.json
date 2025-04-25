@@ -1,7 +1,7 @@
 {
   "navigation": {
-    "home": "Start",
-    "trainings": "Training",
+    "home": "Startseite",
+    "trainings": "Trainings",
     "weight": "Gewicht",
     "events": "Events",
     "activities": "Aktivitäten",
@@ -16,13 +16,13 @@
       "title": "Anmelden",
       "description": "Geben Sie Ihre E-Mail-Adresse ein, um einen Magic Link zu erhalten",
       "emailLabel": "E-Mail-Adresse",
-      "emailPlaceholder": "ihre@email.de",
+      "emailPlaceholder": "sie@beispiel.de",
       "submitButton": "Magic Link senden",
       "sendingButton": "Wird gesendet...",
       "successMessage": "Überprüfen Sie Ihre E-Mails für den Magic Link!"
     },
     "verifyRequest": {
-      "title": "E-Mail überprüfen",
+      "title": "Überprüfen Sie Ihre E-Mails",
       "description": "Ein Anmeldelink wurde an Ihre E-Mail-Adresse gesendet.",
       "instruction": "Klicken Sie auf den Link in der E-Mail, um sich anzumelden.",
       "redirectInfo": "Nach der Anmeldung werden Sie zu Ihren Trainingseinheiten weitergeleitet.",
@@ -40,21 +40,36 @@
       "genderOptions": {
         "male": "Männlich",
         "female": "Weiblich",
-        "other": "Divers",
+        "other": "Andere",
         "preferNotToSay": "Keine Angabe"
       },
       "height": "Größe (cm)",
       "weight": "Gewicht (kg)",
-      "fitnessLevel": "Fitnesslevel",
+      "fitnessLevel": "Fitness Level",
       "fitnessLevels": {
         "beginner": "Anfänger",
         "intermediate": "Fortgeschritten",
-        "advanced": "Profi"
+        "advanced": "Experte"
       },
-      "trainingHistory": "Trainingshistorie",
+      "trainingHistory": "Trainingserfahrung",
       "availableTime": "Verfügbare Trainingszeit",
       "submit": "Änderungen speichern",
-      "saving": "Wird gespeichert..."
+      "saving": "Speichern...",
+      "trainingSchedule": {
+        "title": "Trainingsplan",
+        "description": "Wählen Sie Ihre Trainingstage und planen Sie Ihren wöchentlichen Zeitplan",
+        "trainingDays": "Trainingstage",
+        "selectDays": "Wählen Sie die Tage aus, an denen Sie trainieren möchten",
+        "schedule": "Trainingsplan",
+        "sport": "Sportart",
+        "effort": "Stunden",
+        "sports": {
+          "RUNNING": "Laufen",
+          "CYCLING": "Radfahren",
+          "SWIMMING": "Schwimmen",
+          "TRIATHLON": "Triathlon"
+        }
+      }
     }
   },
   "activities": {
