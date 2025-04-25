@@ -19,8 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import TrainingUnitDetail from './TrainingUnitDetail';
-import { Eye, Activity, Trash2 } from 'lucide-react';
-import Link from 'next/link';
+import { Eye, Activity, Trash2, CheckCircle2, Circle, ChevronDown, ChevronUp } from 'lucide-react';
 import { ActivityType } from '@prisma/client';
 
 interface TrainingUnit {
@@ -67,6 +66,7 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, activities
     const [showDeleteAllActivitiesDialog, setShowDeleteAllActivitiesDialog] = useState(false);
     const [selectedUnit, setSelectedUnit] = useState<TrainingUnit | null>(null);
     const [showDetailDialog, setShowDetailDialog] = useState(false);
+    const [expandedInstructions, setExpandedInstructions] = useState<Record<string, boolean>>({});
     
     // Sort units by date (earliest first)
     const sortedUnits = [...units].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
@@ -116,6 +116,19 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, activities
         setShowDeleteAllActivitiesDialog(false);
     };
 
+    const toggleInstruction = (unitId: string) => {
+        setExpandedInstructions(prev => ({
+            ...prev,
+            [unitId]: !prev[unitId]
+        }));
+    };
+
+    const getInstructionPreview = (instruction: string) => {
+        const maxLength = 100;
+        if (instruction.length <= maxLength) return instruction;
+        return instruction.substring(0, maxLength) + '...';
+    };
+
     // Generate page numbers for pagination
     const getPageNumbers = () => {
         const pages = [];
@@ -155,85 +168,117 @@ const TrainingUnitsList: React.FC<TrainingUnitsListProps> = ({ units, activities
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <h2 className="text-2xl font-bold">Training Units</h2>
-                <div className="flex gap-2">
-                    <Button variant="outline" onClick={() => setShowDeleteAllActivitiesDialog(true)}>
-                        Delete All Activities
-                    </Button>
-                    <Button variant="outline" onClick={() => setShowDeleteAllDialog(true)}>
-                        Delete All Units
-                    </Button>
+                {units.length > 0 && (
+                    <div className="flex gap-2">
+                        <Button variant="outline" onClick={() => setShowDeleteAllActivitiesDialog(true)}>
+                            Delete All Activities
+                        </Button>
+                        <Button variant="outline" onClick={() => setShowDeleteAllDialog(true)}>
+                            Delete All Units
+                        </Button>
+                    </div>
+                )}
+            </div>
+
+            {units.length === 0 ? (
+                <div className="text-center py-12">
+                    <p className="text-muted-foreground">No training units available yet.</p>
                 </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {currentUnits.map((unit) => {
-                    const unitActivities = getActivitiesForDate(unit.date);
-                    return (
-                        <div key={unit.id} className="border rounded-lg p-4 space-y-4">
-                            <div className="flex justify-between items-start">
-                                <div>
-                                    <h3 className="font-semibold">{unit.type}</h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {new Date(unit.date).toLocaleDateString()}
-                                    </p>
-                                    {unit.description && (
-                                        <p className="text-sm mt-1 text-gray-700">
-                                            {unit.description}
+            ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {currentUnits.map((unit) => {
+                        const unitActivities = getActivitiesForDate(unit.date);
+                        return (
+                            <div key={unit.id} className="border rounded-lg p-4 space-y-4">
+                                <div className="flex justify-between items-start">
+                                    <div className="space-y-2">
+                                        <h3 className="font-semibold">{unit.type}</h3>
+                                        <p className="text-sm text-muted-foreground">
+                                            {new Date(unit.date).toLocaleDateString()}
                                         </p>
-                                    )}
-                                </div>
-                                <div className="flex gap-2">
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleViewDetail(unit)}
-                                    >
-                                        <Eye className="h-4 w-4" />
-                                    </Button>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => handleDeleteClick(unit.id)}
-                                    >
-                                        <Trash2 className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            </div>
-
-                            {unitActivities.length > 0 && (
-                                <div className="space-y-2">
-                                    <h4 className="text-sm font-medium">Activities</h4>
-                                    {unitActivities.map((activity) => (
-                                        <div key={activity.id} className="flex flex-col gap-1 text-sm">
-                                            <div className="flex items-center gap-2">
-                                                <Activity className="h-4 w-4" />
-                                                <span className="font-medium">{activity.name}</span>
-                                                <span className="text-muted-foreground">
-                                                    ({Math.round(activity.duration / 60)} min)
-                                                </span>
+                                        {unit.description && (
+                                            <p className="text-sm mt-1">
+                                                {unit.description}
+                                            </p>
+                                        )}
+                                        {unit.instruction && (
+                                            <div className="text-sm mt-1">
+                                                <div className="flex items-start gap-2">
+                                                    <button
+                                                        onClick={() => toggleInstruction(unit.id)}
+                                                        className="text-muted-foreground hover:text-foreground transition-colors"
+                                                        aria-label={expandedInstructions[unit.id] ? "Collapse instruction" : "Expand instruction"}
+                                                    >
+                                                        {expandedInstructions[unit.id] ? (
+                                                            <ChevronUp className="h-4 w-4" />
+                                                        ) : (
+                                                            <ChevronDown className="h-4 w-4" />
+                                                        )}
+                                                    </button>
+                                                    {expandedInstructions[unit.id] ? (
+                                                        <p className="whitespace-pre-wrap">{unit.instruction}</p>
+                                                    ) : (
+                                                        <p className="text-muted-foreground">
+                                                            {getInstructionPreview(unit.instruction)}
+                                                        </p>
+                                                    )}
+                                                </div>
                                             </div>
-                                            {activity.description && (
-                                                <p className="text-muted-foreground text-xs pl-6">
-                                                    {activity.description}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ))}
+                                        )}
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleViewDetail(unit)}
+                                        >
+                                            <Eye className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => handleDeleteClick(unit.id)}
+                                        >
+                                            <Trash2 className="h-4 w-4" />
+                                        </Button>
+                                    </div>
                                 </div>
-                            )}
 
-                            <div className="flex justify-between items-center">
-                                <Button
-                                    variant={unit.completed ? "default" : "outline"}
-                                    onClick={() => onComplete(unit.id, !unit.completed)}
-                                >
-                                    {unit.completed ? "Completed" : "Mark as Complete"}
-                                </Button>
+                                {unitActivities.length > 0 && (
+                                    <div className="space-y-2">
+                                        <h4 className="text-sm font-medium">Activities</h4>
+                                        {unitActivities.map((activity) => (
+                                            <div key={activity.id} className="flex flex-col gap-1 text-sm">
+                                                <div className="flex items-center gap-2">
+                                                    <Activity className="h-4 w-4" />
+                                                    <span className="font-medium">{activity.name}</span>
+                                                    <span className="text-muted-foreground">
+                                                        ({Math.round(activity.duration / 60)} min)
+                                                    </span>
+                                                </div>
+                                                {activity.description && (
+                                                    <p className="text-muted-foreground text-xs pl-6">
+                                                        {activity.description}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                <div className="flex justify-between items-center">
+                                    <Button
+                                        variant={unit.completed ? "default" : "outline"}
+                                        onClick={() => onComplete(unit.id, !unit.completed)}
+                                    >
+                                        {unit.completed ? "Completed" : "Mark as Complete"}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
-            </div>
+                        );
+                    })}
+                </div>
+            )}
 
             {/* Pagination */}
             {totalPages > 1 && (

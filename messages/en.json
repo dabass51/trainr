@@ -54,7 +54,22 @@
       "trainingHistory": "Training History",
       "availableTime": "Available Training Time",
       "submit": "Save Changes",
-      "saving": "Saving..."
+      "saving": "Saving...",
+      "trainingSchedule": {
+        "title": "Training Schedule",
+        "description": "Select your training days and plan your weekly schedule",
+        "trainingDays": "Training Days",
+        "selectDays": "Select the days you want to train",
+        "schedule": "Training Schedule",
+        "sport": "Sport",
+        "effort": "Hours",
+        "sports": {
+          "RUNNING": "Running",
+          "CYCLING": "Cycling",
+          "SWIMMING": "Swimming",
+          "TRIATHLON": "Triathlon"
+        }
+      }
     }
   },
   "activities": {

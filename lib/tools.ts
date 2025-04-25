@@ -31,6 +31,13 @@ const getTomorrowDateInYYYYMMDD = (): string => {
 
 
 async function EditTrainingUnitByDate(userId: string, date: string, updates: Partial<TrainingUnit>) {
+    const profile = await prisma.profile.findUnique({
+        where: { userId: userId },
+    });
+
+    if (!profile) {
+        throw new Error('User profile not found');
+    }
 
     const existingUnit = await prisma.trainingUnit.findFirst({
         where: {
@@ -43,17 +50,45 @@ async function EditTrainingUnitByDate(userId: string, date: string, updates: Par
         throw new Error('Training unit not found or does not belong to the user.');
     }
 
+    // Handle different modification scenarios
+    let modifiedUnit = { ...existingUnit, ...updates };
+
+    // Scenario: Feeling unwell - make training lighter
+    if (updates.intensity === 'low' && existingUnit.intensity !== 'low') {
+        // Reduce duration by 20-30%
+        modifiedUnit.duration = Math.floor(existingUnit.duration * 0.7);
+        // Add a note about recovery
+        modifiedUnit.instruction = `⚠️ Recovery Session\n\n${existingUnit.instruction}\n\nNote: This session has been modified for recovery. Focus on maintaining good form and listen to your body.`;
+    }
+
+    // Scenario: Changing sport type
+    if (updates.type && updates.type !== existingUnit.type) {
+        // Ensure the new type is in preferred disciplines
+        if (!profile.preferredDisciplines.includes(updates.type)) {
+            throw new Error('New training type must be one of your preferred disciplines');
+        }
+        // Update instruction to reflect new sport
+        modifiedUnit.instruction = `🔄 Cross-Training Session\n\n${existingUnit.instruction}\n\nNote: This session has been adapted for ${updates.type}. Maintain similar effort levels and focus on proper technique.`;
+    }
+
+    // Scenario: Complete rest day
+    if (updates.type === 'rest') {
+        modifiedUnit = {
+            ...existingUnit,
+            type: 'rest',
+            description: 'Rest Day',
+            instruction: '🛌 Rest Day\n\nTake a complete rest day to allow your body to recover. Focus on:\n- Hydration\n- Nutrition\n- Light stretching if needed\n- Good sleep',
+            duration: 0,
+            intensity: 'low'
+        };
+    }
+
     const updatedUnit = await prisma.trainingUnit.update({
         where: {
             id: existingUnit.id,
         },
-        data: {
-            ...updates,
-            date: updates.date ? new Date(updates.date) : undefined,
-        },
+        data: modifiedUnit,
     });
-
-    console.log(updatedUnit)
 
     return updatedUnit;
 }
@@ -204,8 +239,7 @@ const addTrainingUnitTool: Tool = {
     ],
 };
 
-async function GenerateTrainingPlan(userId: string, startDate?: string,  endDate?: string, ) {
-
+async function GenerateTrainingPlan(userId: string, startDate?: string, endDate?: string) {
     const today = new Date();
     const defaultEndDate = new Date(today);
     defaultEndDate.setDate(defaultEndDate.getDate() + 28);
@@ -245,39 +279,79 @@ async function GenerateTrainingPlan(userId: string, startDate?: string,  endDate
         eventsDescription = 'No events during the specified time period.';
     }
 
-    const prompt = `Generate a training plan (from ${startDate} to ${endDate}) for an athlete with the following profile:
-    Fitness Level: ${profile.fitnessLevel}
-    Available Training Time: ${profile.availableTrainingTime} hours per week
-    Training History: ${profile.trainingHistory}
+    const prompt = `You are an expert training plan generator. Create a personalized training plan for an athlete with the following profile:
 
+    ### Athlete Profile
+    - Fitness Level: ${profile.fitnessLevel}
+    - Training History: ${profile.trainingHistory}
+    - Weekly Training Effort: ${profile.weeklyEffort || 0} hours
+    - Preferred Disciplines: ${profile.preferredDisciplines.join(', ')}
+    - Training Schedule: ${JSON.stringify(profile.trainingSchedule, null, 2)}
+    - Training Days: ${profile.weeklyTrainingDays.join(', ')}
+
+    ### Time Period
+    - Start Date: ${startDate}
+    - End Date: ${endDate}
     ${eventsDescription}
 
-    Please provide the training plan as a JSON array of training units. It should have the following structure:
-    {"trainings": [{
-      "type": string,
-      "description": string,
-      "instruction": string,
-      "duration": number (in minutes),
-      "intensity": "low" | "medium" | "high",
-      "date": string (in YYYY-MM-DD format, e.g., "2023-03-17")
-    },
-    {
-      "type": string,
-      "description": string,
-      "instruction": string,
-      "duration": number (in minutes),
-      "intensity": "low" | "medium" | "high",
-      "date": string (in YYYY-MM-DD format, e.g., "2023-03-17")
-    }]}
+    ### Requirements
+    1. Training Volume
+       - Total weekly training time must not exceed ${profile.weeklyEffort || 0} hours
+       - Distribute training load evenly across the week
+       - Include appropriate rest days
 
-    Ensure that:
-    1. The total duration of training units doesn't exceed the available training time per week.
-    2. The plan is appropriate for the user's fitness level and training history.
-    3. There's a good mix of different types of exercises and intensities.
-    4. Rest days are included as appropriate.
-    5. All dates fall within the specified date range.
-    6. all days in the date range must be set.
-    7. The plan progresses in difficulty over time if appropriate for the user's level.`;
+    2. Training Structure
+       - Schedule training on the user's preferred days: ${profile.weeklyTrainingDays.join(', ')}
+       - Follow the user's training schedule pattern: ${JSON.stringify(profile.trainingSchedule, null, 2)}
+       - Use preferred disciplines: ${profile.preferredDisciplines.join(', ')}
+       - Include a mix of intensities (low, medium, high)
+       - Progress difficulty appropriately for fitness level: ${profile.fitnessLevel}
+
+    3. Event Considerations
+       - Account for any scheduled events
+       - Adjust training load before and after events
+       - Ensure proper tapering and recovery
+
+    ### Output Format
+    Return a JSON object with the following structure:
+    {
+      "trainings": [
+        {
+          "type": string (one of: ${profile.preferredDisciplines.join(', ')}),
+          "description": string (brief overview of the session),
+          "instruction": string (detailed session plan in the following format:
+            Session Title (Duration)
+            Goal: [specific training goal]
+            Total Time: [total duration]
+            Effort Zones:
+            [Zone descriptions]
+
+            ✅ Warm-Up
+            [Detailed warm-up instructions]
+
+            🔥 Main Set
+            [Detailed main set instructions]
+
+            💡 Focus Points
+            [Key focus areas and technique tips]
+
+            🧊 Cool Down
+            [Detailed cool-down instructions]
+          ),
+          "duration": number (in minutes),
+          "intensity": "low" | "medium" | "high",
+          "date": string (YYYY-MM-DD format)
+        }
+      ]
+    }
+
+    ### Validation Rules
+    - All dates must be within the specified range
+    - Each day must have exactly one training unit
+    - Training types must match preferred disciplines
+    - Weekly hours must not exceed the specified limit
+    - Training days must match the user's schedule
+    - Each training unit must include detailed instructions in the specified format`;
 
     const client = new OpenAI({
         apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
@@ -342,54 +416,110 @@ interface RescheduleChange {
     explanation: string;
 }
 
-async function rescheduleTrainingPlan(userId: string, conflictingDateStart: string, conflictingDateEnd: string, reason:string) {
+async function rescheduleTrainingPlan(userId: string, conflictingDateStart: string, conflictingDateEnd: string, reason: string) {
+    const profile = await prisma.profile.findUnique({
+        where: { userId: userId },
+    });
+
+    if (!profile) {
+        throw new Error('User profile not found');
+    }
 
     const currentPlan = await prisma.trainingUnit.findMany({
         where: { userId: userId },
         orderBy: { date: 'asc' },
     });
 
-    let endDate = currentPlan[currentPlan.length-1].date
+    let endDate = currentPlan[currentPlan.length-1].date;
 
-    const prompt = `
-    I need to reschedule my training plan. Here's the situation:
-    - Current plan: ${JSON.stringify(currentPlan)}
-    - Conflicting dates: from ${ new Date(conflictingDateStart).toISOString()} to ${ new Date(conflictingDateEnd).toISOString()}
-    - Fixed end date of the plan: ${endDate.toISOString()}
-    - Reason for rescheduling: ${reason || 'Not specified'}
+    const prompt = `You are an expert training plan rescheduler. Reschedule the following training plan to accommodate a conflict while maintaining training goals.
 
-    Please provide a rescheduled plan that:
-    1. Resolves conflicts for the specified dates by deciding whether to:
+    ### Current Situation
+    - Conflict Period: ${new Date(conflictingDateStart).toISOString()} to ${new Date(conflictingDateEnd).toISOString()}
+    - Reason: ${reason || 'Not specified'}
+    - Plan End Date: ${endDate.toISOString()}
+    - Current Plan: ${JSON.stringify(currentPlan)}
+
+    ### Athlete Profile
+    - Fitness Level: ${profile.fitnessLevel}
+    - Training History: ${profile.trainingHistory}
+    - Weekly Training Effort: ${profile.weeklyEffort || 0} hours
+    - Preferred Disciplines: ${profile.preferredDisciplines.join(', ')}
+    - Training Schedule: ${JSON.stringify(profile.trainingSchedule, null, 2)}
+    - Training Days: ${profile.weeklyTrainingDays.join(', ')}
+
+    ### Rescheduling Guidelines
+    1. Conflict Resolution Options
        a) Move affected units to suitable alternative dates
-       b) Cancel affected units
-       c) Adjust the plan to accommodate the changes (e.g., by modifying intensities or combining units)
-    2. Maintains a balanced progression towards the training goals
-    3. Ensures appropriate placement of rest days
-    4. Adheres to the fixed end date of ${endDate.toISOString()}
-    5. Adjusts the intensity or volume of remaining units if necessary to compensate for any cancellations or moves
+       b) Cancel affected units if necessary
+       c) Adjust unit parameters (intensity, duration) to fit new schedule
 
-    Consider the following in your decision-making:
-    - The overall training load and progression
-    - The importance of each unit in the broader context of the plan
-    - The proximity to the end date (which might be a competition or event)
-    - The reason for rescheduling, if provided
+    2. Training Integrity
+       - Maintain overall training progression
+       - Preserve key training sessions
+       - Keep appropriate rest periods
+       - Respect the fixed end date: ${endDate.toISOString()}
 
-    For each change you make, please provide a brief explanation of your reasoning.
-    
-    Today is the ${getCurrentDateInYYYYMMDD()}
+    3. User Preferences
+       - Schedule on preferred training days: ${profile.weeklyTrainingDays.join(', ')}
+       - Use preferred disciplines: ${profile.preferredDisciplines.join(', ')}
+       - Follow training schedule pattern: ${JSON.stringify(profile.trainingSchedule, null, 2)}
+       - Maintain weekly training effort: ${profile.weeklyEffort || 0} hours
 
-    Return the new plan as a JSON object with the following structure:
+    4. Adjustments
+       - Modify intensity or volume to compensate for changes
+       - Ensure proper recovery periods
+       - Consider fitness level: ${profile.fitnessLevel}
+       - Account for training history: ${profile.trainingHistory}
+
+    ### Output Format
+    Return a JSON object with the following structure:
     {
-      "rescheduledPlan": [/* array of TrainingUnit objects */],
+      "rescheduledPlan": [
+        {
+          "id": string,
+          "type": string,
+          "description": string (brief overview of the session),
+          "instruction": string (detailed session plan in the following format:
+            🏃 Session Title (Duration)
+            Goal: [specific training goal]
+            Total Time: [total duration]
+            Effort Zones:
+            [Zone descriptions]
+
+            ✅ Warm-Up
+            [Detailed warm-up instructions]
+
+            🔥 Main Set
+            [Detailed main set instructions]
+
+            💡 Focus Points
+            [Key focus areas and technique tips]
+
+            🧊 Cool Down
+            [Detailed cool-down instructions]
+          ),
+          "duration": number,
+          "intensity": string,
+          "date": string
+        }
+      ],
       "changes": [
         {
-          "unitId": "id of the affected unit",
+          "unitId": string,
           "action": "moved" | "cancelled" | "adjusted",
-          "explanation": "Brief explanation of the decision"
+          "explanation": string (detailed explanation of the change)
         }
       ]
     }
-  `;
+
+    ### Validation Rules
+    - No training units beyond the end date
+    - Weekly training effort maintained
+    - Training days match user preferences
+    - All changes must be justified
+    - Training progression preserved
+    - Each training unit must include detailed instructions in the specified format`;
 
     const client = new OpenAI({
         apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
@@ -414,24 +544,37 @@ async function rescheduleTrainingPlan(userId: string, conflictingDateStart: stri
                 throw new Error('AI rescheduled plan exceeds the specified end date');
             }
 
-            await prisma.$transaction([
-                prisma.trainingUnit.deleteMany({
-                    where: {
-                        id: {
-                            in: changes
-                                .filter((change: RescheduleChange) => change.action === 'cancelled')
-                                .map((change: RescheduleChange) => change.unitId)
+            const cancelledUnitIds = changes
+                .filter((change: RescheduleChange) => change.action === 'cancelled')
+                .map((change: RescheduleChange) => change.unitId);
+
+            const transactionOperations = [
+                ...(cancelledUnitIds.length > 0 ? [
+                    prisma.trainingUnit.deleteMany({
+                        where: {
+                            userId: userId,
+                            id: {
+                                in: cancelledUnitIds
+                            }
                         }
-                    }
-                }),
+                    })
+                ] : []),
                 ...rescheduledPlan.map((unit: TrainingUnit) =>
                     prisma.trainingUnit.upsert({
                         where: { id: unit.id },
-                        update: unit,
-                        create: unit,
+                        update: {
+                            ...unit,
+                            userId: userId
+                        },
+                        create: {
+                            ...unit,
+                            userId: userId
+                        },
                     })
                 )
-            ]);
+            ];
+
+            await prisma.$transaction(transactionOperations);
 
             return { rescheduledPlan, changes };
         } else {
@@ -763,3 +906,91 @@ export const askLlm = async (prompt: string ) => {
         throw new Error('Invalid response from Ollama');
     }
 };
+
+// New function to handle multi-day modifications
+async function ModifyTrainingPlan(userId: string, startDate: string, endDate: string, reason: string, modifications: {
+    type?: 'rest' | 'reduced' | 'cross-training';
+    sportReplacement?: string;
+    intensity?: 'low' | 'medium' | 'high';
+}) {
+    const profile = await prisma.profile.findUnique({
+        where: { userId: userId },
+    });
+
+    if (!profile) {
+        throw new Error('User profile not found');
+    }
+
+    const units = await prisma.trainingUnit.findMany({
+        where: {
+            userId: userId,
+            date: {
+                gte: new Date(`${startDate}T00:00:00Z`).toISOString(),
+                lte: new Date(`${endDate}T23:59:59Z`).toISOString(),
+            },
+        },
+        orderBy: { date: 'asc' },
+    });
+
+    const modifiedUnits = units.map(unit => {
+        let modifiedUnit = { ...unit };
+
+        // Handle different modification scenarios
+        switch (modifications.type) {
+            case 'rest':
+                // Convert to rest days
+                modifiedUnit = {
+                    ...unit,
+                    type: 'rest',
+                    description: 'Rest Day',
+                    instruction: '🛌 Rest Day\n\nTake a complete rest day to allow your body to recover. Focus on:\n- Hydration\n- Nutrition\n- Light stretching if needed\n- Good sleep',
+                    duration: 0,
+                    intensity: 'low'
+                };
+                break;
+
+            case 'reduced':
+                // Reduce intensity and duration
+                modifiedUnit.duration = Math.floor(unit.duration * 0.7);
+                modifiedUnit.intensity = 'low';
+                modifiedUnit.instruction = `⚠️ Recovery Session\n\n${unit.instruction}\n\nNote: This session has been modified for recovery. Focus on maintaining good form and listen to your body.`;
+                break;
+
+            case 'cross-training':
+                // Replace with alternative sport
+                if (modifications.sportReplacement) {
+                    if (!profile.preferredDisciplines.includes(modifications.sportReplacement)) {
+                        throw new Error('Replacement sport must be one of your preferred disciplines');
+                    }
+                    modifiedUnit.type = modifications.sportReplacement;
+                    modifiedUnit.instruction = `🔄 Cross-Training Session\n\n${unit.instruction}\n\nNote: This session has been adapted for ${modifications.sportReplacement}. Maintain similar effort levels and focus on proper technique.`;
+                }
+                break;
+        }
+
+        // Apply intensity modification if specified
+        if (modifications.intensity) {
+            modifiedUnit.intensity = modifications.intensity;
+            // Adjust duration based on intensity change
+            if (modifications.intensity === 'low') {
+                modifiedUnit.duration = Math.floor(unit.duration * 0.7);
+            } else if (modifications.intensity === 'high') {
+                modifiedUnit.duration = Math.floor(unit.duration * 1.2);
+            }
+        }
+
+        return modifiedUnit;
+    });
+
+    // Update all modified units in a transaction
+    await prisma.$transaction(
+        modifiedUnits.map(unit =>
+            prisma.trainingUnit.update({
+                where: { id: unit.id },
+                data: unit,
+            })
+        )
+    );
+
+    return modifiedUnits;
+}

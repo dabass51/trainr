@@ -1,10 +1,11 @@
 'use client';
 
 import { Card } from "@/components/ui/card"
-import { AlertCircle, ThumbsDown, Calendar, Dumbbell } from "lucide-react"
+import { AlertCircle, ThumbsDown, Calendar, Dumbbell, Plus, RefreshCw, SkipForward } from "lucide-react"
 
 interface QuickPromptsProps {
     onPromptSelect: (prompt: string) => void;
+    hasExistingUnits: boolean;
 }
 
 interface QuickPrompt {
@@ -15,9 +16,26 @@ interface QuickPrompt {
     variant: 'default' | 'warning';
 }
 
-const quickPrompts: QuickPrompt[] = [
+const creationPrompts: QuickPrompt[] = [
+    {
+        icon: Plus,
+        title: "New Training Plan 10K run",
+        prompt: "Generate a new training plan for a 10K run starting today and ending 4 weeks from today",
+        description: "Create a fresh training plan beginning from today",
+        variant: 'default'
+    },
     {
         icon: Calendar,
+        title: "Custom Plan",
+        prompt: "Create a personalized training plan based on my profile",
+        description: "Generate a plan tailored to your fitness level and goals",
+        variant: 'default'
+    }
+];
+
+const modificationPrompts: QuickPrompt[] = [
+    {
+        icon: SkipForward,
         title: "Skip Today",
         prompt: `I need to skip today's training (${new Date().toISOString().split('T')[0]}) and reschedule it`,
         description: "Move today's training to another day",
@@ -31,18 +49,20 @@ const quickPrompts: QuickPrompt[] = [
         variant: 'default'
     },
     {
-        icon: Calendar,
-        title: "New Training Plan",
-        prompt: "Generate a new training plan starting today",
-        description: "Create a fresh training plan beginning from today",
+        icon: RefreshCw,
+        title: "Refresh Plan",
+        prompt: "Update my current training plan to better match my progress",
+        description: "Adjust the plan based on your recent performance",
         variant: 'default'
     }
 ];
 
-export function QuickPrompts({ onPromptSelect }: QuickPromptsProps) {
+export function QuickPrompts({ onPromptSelect, hasExistingUnits }: QuickPromptsProps) {
+    const prompts = hasExistingUnits ? modificationPrompts : creationPrompts;
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {quickPrompts.map((item, index) => (
+            {prompts.map((item, index) => (
                 <Card 
                     key={index}
                     className={`p-4 cursor-pointer hover:bg-accent transition-colors

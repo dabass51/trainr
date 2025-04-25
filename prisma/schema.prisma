@@ -1,13 +1,193 @@
-// schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL") // uses connection pooling
-  //directUrl = env("DATABASE_URL_NON_POOLING") // uses a direct connection
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id                   String         @id @default(cuid())
+  email                String?        @unique
+  password             String?
+  emailVerified        DateTime?
+  createdAt            DateTime       @default(now()) @map("created_at")
+  updatedAt            DateTime       @updatedAt @map("updated_at")
+  image                String?
+  name                 String?
+  stravaAccessToken    String?        @map("strava_access_token")
+  stravaRefreshToken   String?        @map("strava_refresh_token")
+  stravaTokenExpiresAt DateTime?      @map("strava_token_expires_at")
+  accounts             Account[]
+  Job                  Job[]
+  profile              Profile?
+  sessions             Session[]
+  trainingUnits        TrainingUnit[]
+  weightEntries        WeightEntry[]
+  activities           Activity[]
+  events               Event[]
+  gpsData              GPSData[]
+
+  @@map("users")
+}
+
+model Profile {
+  id                 String   @id @default(cuid())
+  user               User     @relation(fields: [userId], references: [id])
+  userId             String   @unique
+  firstName          String
+  lastName           String
+  dateOfBirth        DateTime?
+  gender             String?
+  height             String?
+  weight             String?
+  fitnessLevel       String?
+  trainingHistory    String?
+  weeklyTrainingDays String[] // Days of the week selected for training
+  weeklyEffort       Int?     // Total weekly effort in hours
+  trainingSchedule   Json?    // Detailed schedule: { "monday": { "sport": "RUNNING", "effort": 2 }, ... }
+  preferredDisciplines String[] // Store as string array instead of SportType[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model WeightEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  weight    Float
+  unit      String
+  date      DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model TrainingUnit {
+  id          String     @id @default(cuid())
+  userId      String
+  type        String
+  description String
+  instruction String
+  duration    Int
+  intensity   String
+  date        DateTime
+  completed   Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [userId], references: [id])
+  activities  Activity[]
+}
+
+model Job {
+  id        String    @id @default(cuid())
+  userId    String
+  prompt    String
+  status    JobStatus @default(PENDING)
+  result    String?
+  error     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                 String    @id @default(cuid())
+  userId             String
+  providerType       String
+  providerId         String
+  providerAccountId  String
+  refreshToken       String?
+  accessToken        String?
+  accessTokenExpires DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  user               User      @relation(fields: [userId], references: [id])
+
+  @@unique([providerId, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("sessions")
+}
+
+model GPSData {
+  id         Int       @id @default(autoincrement())
+  latitude   Float
+  longitude  Float
+  elevation  Float
+  time       DateTime
+  userId     String
+  activityId String?
+  pulse      Int?
+  watts      Int?
+  activity   Activity? @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("gps_data")
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  date        DateTime
+  userId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  distance    String?
+  sportType   SportType
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("events")
+}
+
+model Activity {
+  id             String        @id @default(cuid())
+  name           String
+  userId         String
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  activityType   ActivityType
+  avgCadence     Int?
+  avgHeartRate   Int?
+  avgPower       Int?
+  avgSpeed       Float?
+  calories       Int?
+  distance       Float?
+  duration       Int
+  elevationGain  Float?
+  endTime        DateTime
+  maxCadence     Int?
+  maxHeartRate   Int?
+  maxPower       Int?
+  maxSpeed       Float?
+  startTime      DateTime
+  trainingUnitId String?
+  trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id])
+  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  gpsData        GPSData[]
+
+  @@map("activities")
+}
+
+model VerificationToken {
+  id         String   @id @default(cuid())
+  identifier String
+  token      String   @unique
+  expires    DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([identifier, token])
 }
 
 enum ActivityType {
@@ -29,183 +209,4 @@ enum JobStatus {
   IN_PROGRESS
   COMPLETED
   FAILED
-}
-
-model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  password      String?
-  emailVerified DateTime?
-  image         String?
-  createdAt     DateTime  @default(now()) @map(name: "created_at")
-  updatedAt     DateTime  @updatedAt @map(name: "updated_at")
-  profile       Profile?
-  trainingUnits TrainingUnit[]
-  sessions      Session[]
-  accounts      Account[]
-  gpsData       GPSData[]
-  activities    Activity[]
-  events        Event[]
-  weightEntries WeightEntry[]
-  Job           Job[]
-  stravaAccessToken String? @map(name: "strava_access_token")
-  stravaRefreshToken String? @map(name: "strava_refresh_token")
-  stravaTokenExpiresAt DateTime? @map(name: "strava_token_expires_at")
-
-  @@map(name: "users")
-}
-
-model Profile {
-  id                 String   @id @default(cuid())
-  user               User     @relation(fields: [userId], references: [id])
-  userId             String   @unique
-  firstName          String
-  lastName           String
-  dateOfBirth        DateTime?
-  gender             String?
-  height             String?
-  weight             String?
-  fitnessLevel       String?
-  trainingHistory    String?
-  availableTrainingTime String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-}
-
-model WeightEntry {
-  id        String  @id @default(cuid())
-  user      User    @relation(fields: [userId], references: [id])
-  userId    String
-  weight    Float
-  unit      String
-  date      DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model TrainingUnit {
-  id          String   @id @default(cuid())
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  type        String
-  description String
-  instruction String
-  duration    Int
-  intensity   String
-  date        DateTime
-  completed   Boolean  @default(false)
-  activities  Activity[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Job {
-  id        String   @id @default(cuid())
-  userId    String
-  prompt    String
-  status    JobStatus @default(PENDING)
-  result    String?
-  error     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Account {
-  id                 String    @id @default(cuid())
-  userId             String
-  providerType       String
-  providerId         String
-  providerAccountId  String
-  refreshToken       String?
-  accessToken        String?
-  accessTokenExpires DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  user               User      @relation(fields: [userId], references: [id])
-
-  @@unique([providerId, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  userId       String
-  expires      DateTime
-  sessionToken String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-}
-
-model GPSData {
-  id         Int        @id @default(autoincrement())
-  latitude   Float
-  longitude  Float
-  elevation  Float
-  time       DateTime
-  pulse      Int?
-  watts      Int?
-  userId     String
-  activityId String?
-  user       User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  activity   Activity?  @relation(fields: [activityId], references: [id], onDelete: Cascade)
-
-  @@map("gps_data")
-}
-
-model Event {
-  id          String    @id @default(cuid())
-  title       String
-  description String?
-  date        DateTime
-  sportType   SportType
-  distance    String?
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@map("events")
-}
-
-model Activity {
-  id            String       @id @default(cuid())
-  name          String
-  activityType  ActivityType
-  userId        String
-  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  gpsData       GPSData[]
-  startTime     DateTime
-  endTime       DateTime
-  duration      Int          // in seconds
-  distance      Float?       // in meters
-  avgHeartRate  Int?
-  maxHeartRate  Int?
-  avgPower      Int?        // for cycling
-  maxPower      Int?
-  avgCadence    Int?
-  maxCadence    Int?
-  avgSpeed      Float?      // in m/s
-  maxSpeed      Float?
-  elevationGain Float?      // in meters
-  calories      Int?
-  trainingUnitId String?
-  trainingUnit   TrainingUnit? @relation(fields: [trainingUnitId], references: [id])
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
-
-  @@map("activities")
-}
-
-model VerificationToken {
-  id         String   @id @default(cuid())
-  identifier String
-  token      String   @unique
-  expires    DateTime
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@unique([identifier, token])
 }

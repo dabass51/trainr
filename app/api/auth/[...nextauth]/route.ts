@@ -32,7 +32,7 @@ const handler = NextAuth({
         await transport.sendMail({
           to: email,
           from: provider.from,
-          subject: isSignIn ? "Sign in to Trainer" : "Verify your email for Trainer",
+          subject: isSignIn ? "Sign in to Trainingsplatz" : "Verify your email for Trainingsplatz",
           html: emailTemplate,
         })
       },

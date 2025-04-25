@@ -12,7 +12,7 @@ import { useJob } from '@/provider/JobProvider';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent } from "@/components/ui/card"
-import { useToast } from "@/hooks/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { QuickPrompts } from '@/components/QuickPrompts';
 import { ActivityType } from '@prisma/client';
 import { useTranslation } from '@/provider/LanguageProvider';
@@ -376,7 +376,7 @@ export default function TrainingUnitsPage() {
             {/* Quick Prompts */}
             <div className="mt-4">
                 <h2 className="text-lg font-semibold mb-3">{t('trainingUnits.quickActions')}</h2>
-                <QuickPrompts onPromptSelect={handleGeneratePlan} />
+                <QuickPrompts onPromptSelect={handleGeneratePlan} hasExistingUnits={units.length > 0} />
             </div>
 
             {/* Switch between List View and Calendar View */}

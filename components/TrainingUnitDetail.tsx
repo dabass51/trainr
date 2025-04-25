@@ -81,16 +81,16 @@ const TrainingUnitDetail: React.FC<TrainingUnitDetailProps> = ({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
+            <DialogContent className="sm:max-w-[500px] max-h-[80vh] flex flex-col p-0">
+                <DialogHeader className="px-6 pt-6 pb-4">
+                    <DialogTitle className="flex items-center gap-2 text-lg">
                         {getTypeIcon(unit.type)}
                         <span>{unit.type}</span>
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6 py-4">
+                <div className="overflow-y-auto flex-1 px-6">
                     {/* Status Badge */}
-                    <div className="flex justify-end">
+                    <div className="flex justify-end mb-4">
                         <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                             unit.completed 
                             ? 'bg-green-100 text-green-800' 
@@ -100,64 +100,66 @@ const TrainingUnitDetail: React.FC<TrainingUnitDetailProps> = ({
                         </span>
                     </div>
 
-                    {/* Date */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <Calendar className="h-4 w-4 text-gray-500" />
-                        <span>{formattedDate}</span>
-                    </div>
+                    <div className="space-y-6">
+                        {/* Date */}
+                        <div className="flex items-center gap-2 text-sm">
+                            <Calendar className="h-4 w-4 text-gray-500" />
+                            <span>{formattedDate}</span>
+                        </div>
 
-                    {/* Duration */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <Clock className="h-4 w-4 text-gray-500" />
-                        <span>{unit.duration} minutes</span>
-                    </div>
+                        {/* Duration */}
+                        <div className="flex items-center gap-2 text-sm">
+                            <Clock className="h-4 w-4 text-gray-500" />
+                            <span>{unit.duration} minutes</span>
+                        </div>
 
-                    {/* Intensity */}
-                    <div className="flex items-center gap-2 text-sm">
-                        <Activity className="h-4 w-4 text-gray-500" />
-                        <span className={`px-2 py-1 rounded ${getIntensityColor(unit.intensity)}`}>
-                            {unit.intensity} {t('trainingUnits.detail.intensity')}
-                        </span>
-                    </div>
+                        {/* Intensity */}
+                        <div className="flex items-center gap-2 text-sm">
+                            <Activity className="h-4 w-4 text-gray-500" />
+                            <span className={`px-2 py-1 rounded ${getIntensityColor(unit.intensity)}`}>
+                                {unit.intensity} {t('trainingUnits.detail.intensity')}
+                            </span>
+                        </div>
 
-                    {/* Description */}
-                    <div className="space-y-2">
-                        <h4 className="font-medium">{t('trainingUnits.detail.description')}</h4>
-                        <p className="text-sm text-gray-600">{unit.description}</p>
-                    </div>
+                        {/* Description */}
+                        <div className="space-y-2">
+                            <h4 className="font-medium text-base">{t('trainingUnits.detail.description')}</h4>
+                            <p className="text-sm">{unit.description}</p>
+                        </div>
 
-                    {/* Instructions */}
-                    <div className="space-y-2">
-                        <h4 className="font-medium">{t('trainingUnits.detail.instructions')}</h4>
-                        <p className="text-sm text-gray-600">{unit.instruction}</p>
+                        {/* Instructions */}
+                        <div className="space-y-2">
+                            <h4 className="font-medium text-base">{t('trainingUnits.detail.instructions')}</h4>
+                            <p className="text-sm whitespace-pre-wrap">{unit.instruction}</p>
+                        </div>
                     </div>
+                </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex justify-end gap-2 pt-4">
-                        <Button
-                            variant="outline"
-                            onClick={onClose}
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            variant={unit.completed ? "destructive" : "default"}
-                            onClick={() => onComplete(unit.id, !unit.completed)}
-                            className="gap-2"
-                        >
-                            {unit.completed ? (
-                                <>
-                                    <XCircle className="h-4 w-4" />
-                                    Mark as Incomplete
-                                </>
-                            ) : (
-                                <>
-                                    <CheckCircle2 className="h-4 w-4" />
-                                    Mark as Complete
-                                </>
-                            )}
-                        </Button>
-                    </div>
+                {/* Action Buttons */}
+                <div className="flex justify-end gap-2 p-6 border-t mt-4">
+                    <Button
+                        variant="outline"
+                        onClick={onClose}
+                    >
+                        Close
+                    </Button>
+                    <Button
+                        variant={unit.completed ? "destructive" : "default"}
+                        onClick={() => onComplete(unit.id, !unit.completed)}
+                        className="gap-2"
+                    >
+                        {unit.completed ? (
+                            <>
+                                <XCircle className="h-4 w-4" />
+                                Mark as Incomplete
+                            </>
+                        ) : (
+                            <>
+                                <CheckCircle2 className="h-4 w-4" />
+                                Mark as Complete
+                            </>
+                        )}
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>

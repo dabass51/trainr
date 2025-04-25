@@ -69,14 +69,10 @@ export async function GET(request: NextRequest) {
 
             user.stravaAccessToken = data.access_token;
         }
-        console.log( 'aasdad' )
         // Fetch activities from Strava
         const after = request.nextUrl.searchParams.get('after');
         const before = request.nextUrl.searchParams.get('before');
         
-        console.log( after )
-        console.log( before )
-
         const params = new URLSearchParams({
             per_page: '30',
             page: '1',

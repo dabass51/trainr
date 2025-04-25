@@ -15,7 +15,7 @@ import {
     Bike,
     ArrowLeft
 } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 interface TrainingUnit {
     id: string;
