@@ -3,6 +3,7 @@ import path from 'path'
 import matter from 'gray-matter'
 import { remark } from 'remark'
 import html from 'remark-html'
+import gfm from 'remark-gfm'
 
 export type BlogPost = {
   slug: string
@@ -81,6 +82,9 @@ export function getCategories(lang: string): string[] {
 }
 
 export async function markdownToHtml(markdown: string) {
-  const result = await remark().use(html).process(markdown)
+  const result = await remark()
+    .use(gfm)
+    .use(html)
+    .process(markdown)
   return result.toString()
 } 

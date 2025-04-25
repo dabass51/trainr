@@ -10,20 +10,11 @@ const MarketingPage = () => {
     return (
         <main>
             <Hero />
-            <ParallaxImage 
-                src="/mood_2.jpg" 
-                alt="Athletes training at sunset"
-            />
+            
             <Features />
-            <ParallaxImage 
-                src="/mood_3.jpg" 
-                alt="Runner on mountain trail"
-            />
+            
             <Elevate />
-            <ParallaxImage 
-                src="/mood_4.jpg" 
-                alt="Group workout session"
-            />
+            
             <GetStarted />
         </main>
     );

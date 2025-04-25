@@ -20,7 +20,7 @@ export function BlogCard({ post }: BlogCardProps) {
   return (
     <Card className="flex flex-col h-full">
       {post.image && (
-        <div className="relative w-full h-48 overflow-hidden">
+        <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
           <Image
             src={post.image}
             alt={post.title}

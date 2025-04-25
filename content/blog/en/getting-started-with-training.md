@@ -1,16 +1,16 @@
 ---
 title: Getting Started with Your Training Journey
-date: '2024-03-20'
+date: '2025-03-20'
 category: training
 description: Learn how to begin your fitness journey with our comprehensive guide for beginners.
-image: /images/blog/training-journey.jpg
+image: /mood_4.jpg
 ---
 
 # Getting Started with Your Training Journey
 
 Starting a new fitness journey can be both exciting and overwhelming. In this guide, we'll walk you through the essential steps to begin your training journey on the right foot.
 
-![A person starting their fitness journey](/mood_1.jpg)
+![A person starting their fitness journey](/mood_4.jpg)
 
 ## 1. Set Clear Goals
 

@@ -3,14 +3,14 @@ title: Erste Schritte auf deiner Trainingsreise
 date: '2024-03-20'
 category: training
 description: Erfahre in unserem umfassenden Leitfaden für Anfänger, wie du deine Fitnessreise beginnen kannst.
-image: /images/blog/training-journey.jpg
+image: /mood_4.jpg
 ---
 
 # Erste Schritte auf deiner Trainingsreise
 
 Eine neue Fitnessreise zu beginnen kann sowohl aufregend als auch überwältigend sein. In diesem Leitfaden zeigen wir dir die wichtigsten Schritte, um deine Trainingsreise richtig zu starten.
 
-![Eine Person beginnt ihre Fitnessreise](/mood_1.jpg)
+![Eine Person beginnt ihre Fitnessreise](/mood_4.jpg)
 
 ## 1. Setze klare Ziele
 
