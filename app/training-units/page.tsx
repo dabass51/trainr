@@ -245,7 +245,6 @@ export default function TrainingUnitsPage() {
     };
 
     const handleDateClick = (selectedDays: Date[]) => {
-        console.log('asdasd')
         if (selectedDays.length > 0) {
             const date = selectedDays[0].toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
             setSelectedDate(date);
