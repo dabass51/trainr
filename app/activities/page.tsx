@@ -1,4 +1,4 @@
-// app/page.tsx
+// app/activities/page.tsx
 import { Metadata } from "next";
 import { ActivitiesList } from "@/components/ActivitiesList";
 

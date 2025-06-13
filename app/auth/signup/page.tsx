@@ -1,4 +1,4 @@
-// app/api/auth/signup/page.tsx
+// app/auth/signup/page.tsx
 'use client'
 
 import {Signup} from "@/components/signup";

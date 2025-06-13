@@ -1,4 +1,4 @@
-// /app/marketing/layout.tsx
+// app/marketing/layout.tsx
 import React from 'react';
 
 const MarketingLayout = ({ children }: { children: React.ReactNode }) => {

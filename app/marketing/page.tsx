@@ -1,4 +1,4 @@
-// /app/marketing/page.tsx
+// app/marketing/page.tsx
 import React from 'react';
 import { Hero } from '@/components/Hero';
 import { Features } from '@/components/Features';
