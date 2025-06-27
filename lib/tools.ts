@@ -694,8 +694,8 @@ function getValueOfParameter(
     parameterName: string,
     parameters: FunctionParameter[],
 ) {
-    return parameters.filter((p) => p.parameterName === parameterName)[0]
-        .parameterValue;
+    const param = parameters.find((p) => p.parameterName === parameterName)
+    return param ? param.parameterValue : undefined
 }
 
 export async function executeFunction(

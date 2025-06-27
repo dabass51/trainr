@@ -118,7 +118,7 @@ export async function GET(request: NextRequest) {
                 }
 
                 const startTime = new Date(activity.start_date);
-                const endTime = new Date(activity.start_date_local);
+                const endTime = new Date(startTime.getTime() + activity.elapsed_time * 1000);
 
                 // Create or update activity in our database
                 const existingActivity = await prisma.activity.findFirst({
