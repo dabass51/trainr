@@ -81,3 +81,43 @@ export async function GET(request: NextRequest) {
         await prisma.$disconnect();
     }
 }
+
+export async function DELETE(request: NextRequest) {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.id) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    try {
+        const { searchParams } = new URL(request.url);
+        const deleteAll = searchParams.get('deleteAll');
+
+        if (deleteAll === 'true') {
+            // Delete all activities for the user
+            const result = await prisma.activity.deleteMany({
+                where: {
+                    userId: session.user.id,
+                },
+            });
+
+            return NextResponse.json({ 
+                message: `Deleted ${result.count} activities`,
+                deletedCount: result.count 
+            });
+        } else {
+            return NextResponse.json(
+                { error: 'Missing deleteAll parameter or invalid value' },
+                { status: 400 }
+            );
+        }
+    } catch (error) {
+        console.error('Error deleting activities:', error);
+        return NextResponse.json(
+            { error: 'Error deleting activities' },
+            { status: 500 }
+        );
+    } finally {
+        await prisma.$disconnect();
+    }
+}
