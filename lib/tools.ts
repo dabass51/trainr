@@ -705,50 +705,49 @@ export async function executeFunction(
 
     switch (functionName) {
         case "GenerateTrainingPlan":
-            console.log("GenerateTrainingPlan")
             return await GenerateTrainingPlan(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("startDate", parameters),
-                getValueOfParameter("endDate", parameters)
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("startDate", parameters) ?? "",
+                getValueOfParameter("endDate", parameters) ?? ""
             );
         case "rescheduleTrainingPlan":
             console.log("rescheduleTrainingPlan")
             return await rescheduleTrainingPlan(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("conflictingDateStart", parameters),
-                getValueOfParameter("conflictingDateEnd", parameters),
-                getValueOfParameter("reason", parameters)
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("conflictingDateStart", parameters) ?? "",
+                getValueOfParameter("conflictingDateEnd", parameters) ?? "",
+                getValueOfParameter("reason", parameters) ?? ""
             );
         case "AddTrainingUnit":
             console.log("AddTrainingUnit")
             return await AddTrainingUnit(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("type", parameters),
-                getValueOfParameter("description", parameters),
-                getValueOfParameter("instruction", parameters),
-                parseInt(getValueOfParameter("duration", parameters)),
-                getValueOfParameter("intensity", parameters),
-                getValueOfParameter("date", parameters)
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("type", parameters) ?? "",
+                getValueOfParameter("description", parameters) ?? "",
+                getValueOfParameter("instruction", parameters) ?? "",
+                parseInt(getValueOfParameter("duration", parameters) ?? "0"),
+                getValueOfParameter("intensity", parameters) ?? "",
+                getValueOfParameter("date", parameters) ?? ""
             );
         case "GetTrainingUnitForDay":
             console.log("GetTrainingUnitForDay")
             return await GetTrainingUnitForDay(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("date", parameters)
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("date", parameters) ?? ""
             );
         case "GetTrainingUnitsForRange":
             console.log("GetTrainingUnitsForRange")
             return await GetTrainingUnitsForRange(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("startDate", parameters),
-                getValueOfParameter("endDate", parameters)
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("startDate", parameters) ?? "",
+                getValueOfParameter("endDate", parameters) ?? ""
             );
         case "EditTrainingUnitByDate":
             console.log("EditTrainingUnit")
             return await EditTrainingUnitByDate(
-                getValueOfParameter("userId", parameters),
-                getValueOfParameter("date", parameters),
-                JSON.parse(getValueOfParameter("updates", parameters))
+                getValueOfParameter("userId", parameters) ?? "",
+                getValueOfParameter("date", parameters) ?? "",
+                JSON.parse(getValueOfParameter("updates", parameters) ?? "{}")
             );
     }
 }
